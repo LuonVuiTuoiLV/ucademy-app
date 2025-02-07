@@ -22,13 +22,13 @@ export async function POST(req: Request) {
 			'svix-signature': svix_signature,
 		}) as WebhookEvent;
 	} catch (err) {
+		console.log('err:', err);
 		return new Response('Bad Request', { status: 400 });
 	}
 
 	const eventType = msg.type;
 	if (eventType === 'user.created') {
 		// create user to database
-		console.log('err:', err);
 		console.log('msg.type:', msg.data);
 	}
 	// Rest
