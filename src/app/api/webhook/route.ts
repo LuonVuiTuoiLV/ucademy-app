@@ -28,6 +28,7 @@ export async function POST(req: Request) {
 	const eventType = msg.type;
 	if (eventType === 'user.created') {
 		// create user to database
+		console.log('err:', err);
 		console.log('msg.type:', msg.data);
 	}
 	// Rest
