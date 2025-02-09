@@ -1,4 +1,4 @@
-'user server';
+'use server';
 
 import { TCreateUserParams } from '@/components/types';
 import User from '@/database/user.model';
