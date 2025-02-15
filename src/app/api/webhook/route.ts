@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { Webhook } from 'svix';
 
 export async function POST(request: Request) {
+	// Validate headers
 	const svixId = (await headers()).get('svix-id') ?? '';
 	const svixTimestamp = (await headers()).get('svix-timestamp') ?? '';
 	const svixSignature = (await headers()).get('svix-signature') ?? '';
@@ -12,48 +13,61 @@ export async function POST(request: Request) {
 	if (!process.env.WEBHOOK_SECRET) {
 		throw new Error('WEBHOOK_SECRET is not set');
 	}
+
 	if (!svixId || !svixTimestamp || !svixSignature) {
-		return new Response('Bad Request', { status: 400 });
+		return new Response('Missing required headers', { status: 400 });
 	}
+
+	// Verify webhook
 	const payload = await request.json();
 	const body = JSON.stringify(payload);
-
-	const sivx = new Webhook(process.env.WEBHOOK_SECRET);
+	const svix = new Webhook(process.env.WEBHOOK_SECRET);
 
 	let message: WebhookEvent;
 
 	try {
-		message = sivx.verify(body, {
+		message = svix.verify(body, {
 			'svix-id': svixId,
 			'svix-timestamp': svixTimestamp,
 			'svix-signature': svixSignature,
 		}) as WebhookEvent;
-	} catch {
-		return new Response('Bad Request', { status: 400 });
+	} catch (error) {
+		console.error('Webhook verification failed:', error);
+		return new Response('Invalid signature', { status: 400 });
 	}
 
 	const eventType = message.type;
 
 	if (eventType === 'user.created') {
-		// create user to database
 		const {
 			email_addresses: emailAddress,
 			id,
 			image_url: imageURL,
 			username,
 		} = message.data;
-		const user = await createUser({
-			username: username!,
-			name: username!,
-			clerkId: id,
-			email: emailAddress[0].email_address || '',
-			avatar: imageURL,
-		});
 
-		return NextResponse.json({
-			message: 'OK',
-			user,
-		});
+		// Validate required fields
+		if (!username || !id || !emailAddress.length) {
+			return new Response('Missing required fields', { status: 400 });
+		}
+
+		try {
+			const user = await createUser({
+				username,
+				name: username,
+				clerkId: id,
+				email: emailAddress[0]?.email_address || '',
+				avatar: imageURL || '',
+			});
+
+			return NextResponse.json({
+				message: 'OK',
+				user,
+			});
+		} catch (error) {
+			console.error('Error creating user:', error);
+			return new Response('Error creating user', { status: 500 });
+		}
 	}
 
 	return new Response('OK', { status: 200 });
