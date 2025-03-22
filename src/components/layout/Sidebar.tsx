@@ -2,14 +2,14 @@
 import { menuItems } from '@/constants';
 import { useAuth, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
-import { ActiveLink } from '../common';
-import { ModeToggle } from '../common/ModeToggle';
+import { ActiveLink, ModeToggle } from '../common';
 import { IconUsers } from '../icons';
 import { TMenuItem } from '../types';
+
 const Sidebar = () => {
 	const { userId } = useAuth();
 	return (
-		<div className="flex flex-col p-5 bg-white border-r dark:bg-grayDarker dark:border-opacity-10 border-r-gray-200">
+		<div className="hidden lg:flex flex-col p-5 bg-white border-r dark:bg-grayDarker dark:border-opacity-10 border-r-gray-200 fixed top-0 left-0 bottom-0 w-[300px]">
 			<a href="/ " className="inline-block mb-5 text-3xl font-bold">
 				<span className="text-primary">U</span>
 				cademy
@@ -25,7 +25,7 @@ const Sidebar = () => {
 				))}
 			</ul>
 			<div className="flex items-center justify-end gap-5 mt-auto">
-				<ModeToggle></ModeToggle>
+				<ModeToggle />
 				{!userId ? (
 					<Link
 						href="/sign-in"

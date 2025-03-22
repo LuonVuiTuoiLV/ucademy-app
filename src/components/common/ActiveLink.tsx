@@ -1,12 +1,12 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ActiveLinkProps } from '../types';
+import { TActiveLinkProps } from '../types';
 
-const ActiveLink = ({ url, children }: ActiveLinkProps) => {
+const ActiveLink = ({ url, children }: TActiveLinkProps) => {
 	const pathname = usePathname();
-
 	const isActive = url === pathname;
+
 	return (
 		<Link
 			href={url}
