@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { IUser } from '@/database/user.model';
-import { createCourse } from '@/lib/actions/course.action';
+import { createCourse } from '@/lib/actions/course.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

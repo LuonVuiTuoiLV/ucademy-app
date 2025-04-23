@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 dark:bg-grayDarkest dark:text-white text-grayDarkest antialiased;
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
+@layer components {
+  .svg-animate {
+    stroke-dashoffset: 100;
+    stroke-dasharray: 100;
+    animation: dash 1.5s linear forwards;
+  }
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+@layer utilities {
+  .flexCenter {
+    @apply flex items-center justify-center;
+  }
+  .bgDarkMode {
+    @apply bg-white dark:bg-grayDarker;
+  }
+  .borderDarkMode {
+    @apply border-gray-200 dark:border-opacity-10;
+  }
+  .focus-primary:focus {
+    @apply focus:ring-4 focus:ring-primary focus:ring-opacity-10;
+  }
+  .skeleton {
+    @apply bg-gray-200 dark:bg-grayDarker animate-pulse;
+  }
+}
+
+@media screen and (max-width: 1023.98px) {
+  .course-slider {
+    justify-content: flex-start;
+    grid-auto-columns: 300px;
+    grid-auto-flow: column;
+    overflow: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding: 1rem;
+    grid-template-columns: unset;
+  }
+  .course-slider::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
+  .course-slider > * {
+    scroll-snap-align: start;
+  }
+}
+.table-responsive {
+  @media screen and (max-width: 1023.98px) {
+    th,
+    td {
+      &:not(:first-child) {
+        padding-left: 100px;
+      }
+    }
+  }
+}
+.entry-content {
+  font-size: 16px;
+  line-height: 2;
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  ul,
+  ol,
+  figure {
+    @apply mb-5;
+  }
+  ol {
+    list-style: decimal;
+  }
+  ul {
+    list-style: disc;
+  }
+  ol,
+  ul {
+    @apply pl-10;
+  }
+  a {
+    @apply underline text-primary font-medium;
+  }
+}
+
+.button-primary {
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: auto;
+    right: 0;
+    height: 100%;
+    width: 0;
+    background-color: rgba(white, 0.1);
+    transition: all 0.25s linear;
+    z-index: -1;
+  }
+  &:hover:before {
+    left: 0;
+    width: 100%;
+  }
+}
+html body .swal2-container {
+  .swal2-popup {
+    @apply w-full;
+    max-width: 450px;
+  }
+  .swal2-title {
+    @apply font-bold text-xl;
+  }
+  .swal2-actions {
+    .swal2-confirm {
+      @apply bg-primary;
+    }
+    .swal2-cancel {
+      @apply bg-red-300 text-grayDarkest hover:bg-red-400 hover:bg-none;
+    }
+    .swal2-confirm,
+    .swal2-cancel {
+      @apply w-[150px];
+    }
+  }
+}
+.animate-bar {
+  animation: animation-width 5s linear 1;
+}
+@keyframes animation-width {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}
