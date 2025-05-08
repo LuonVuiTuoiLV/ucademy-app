@@ -1,23 +1,19 @@
-import { Heading } from '@/components/common';
-import { getCouponByCode } from '@/lib/actions/coupon.actions';
-import UpdateCouponForm from './UpdateCouponForm';
+import { UpdateCouponPage } from '@/modules/coupon/pages';
+import { Heading } from '@/shared/components/common';
 
-const page = async ({
-  searchParams,
-}: {
+export interface UpdateCouponPageRootProps {
   searchParams: {
     code: string;
   };
-}) => {
-  searchParams = await searchParams;
-  const couponDetails = await getCouponByCode({ code: searchParams.code });
-  if (!couponDetails) return null;
-  return (
-    <div>
-      <Heading className="mb-10">Tạo mới mã giảm giá</Heading>
-      <UpdateCouponForm data={couponDetails}></UpdateCouponForm>
-    </div>
-  );
-};
+}
 
-export default page;
+function UpdateCouponPageRoot({ searchParams }: UpdateCouponPageRootProps) {
+  return (
+    <>
+      <Heading>Update coupon</Heading>
+      <UpdateCouponPage code={searchParams.code} />;
+    </>
+  );
+}
+
+export default UpdateCouponPageRoot;

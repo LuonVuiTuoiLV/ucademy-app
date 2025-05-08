@@ -1,23 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer base {
   body {
     @apply bg-gray-50 dark:bg-grayDarkest dark:text-white text-grayDarkest antialiased;
-    input[type='number']::-webkit-inner-spin-button,
-    input[type='number']::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  button:disabled {
+    @apply cursor-not-allowed;
   }
 }
 @layer components {
   .svg-animate {
     stroke-dashoffset: 100;
     stroke-dasharray: 100;
-    animation: dash 1.5s linear forwards;
+    animation: dash 3s linear forwards;
   }
+
   @keyframes dash {
     to {
       stroke-dashoffset: 0;
@@ -41,7 +44,6 @@
     @apply bg-gray-200 dark:bg-grayDarker animate-pulse;
   }
 }
-
 @media screen and (max-width: 1023.98px) {
   .course-slider {
     justify-content: flex-start;
@@ -104,13 +106,12 @@
     @apply underline text-primary font-medium;
   }
 }
-
 .button-primary {
   position: relative;
   overflow: hidden;
   z-index: 2;
-  &::before {
-    content: '';
+  &:before {
+    content: "";
     position: absolute;
     top: 0;
     left: auto;
@@ -139,18 +140,17 @@ html body .swal2-container {
       @apply bg-primary;
     }
     .swal2-cancel {
-      @apply bg-red-300 text-grayDarkest hover:bg-red-400 hover:bg-none;
+      @apply bg-transparent text-grayDarkest hover:bg-transparent hover:bg-none;
     }
-    .swal2-confirm,
-    .swal2-cancel {
+    .swal2-confirm {
       @apply w-[150px];
     }
   }
 }
 .animate-bar {
-  animation: animation-width 5s linear 1;
+  animation: animate-width 5s linear 1;
 }
-@keyframes animation-width {
+@keyframes animate-width {
   from {
     width: 100%;
   }

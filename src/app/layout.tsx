@@ -1,18 +1,25 @@
-import type { Metadata } from 'next';
-
-import { ThemeProvider } from '@/components/common';
-import { manrope } from '@/utils';
-import { ClerkProvider } from '@clerk/nextjs';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.scss';
 
+import { ClerkProvider } from '@clerk/nextjs';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Metadata } from 'next';
+import { Manrope } from 'next/font/google';
+import { ToastContainer } from 'react-toastify';
+
+import { ThemeProvider } from '@/shared/components/common';
+import { UserProvider } from '@/shared/contexts';
+
 export const metadata: Metadata = {
   title: 'Ucademy',
-  description: 'Nền tảng học lập trình trực tuyến.',
+  description: 'Nền tảng học lập trình trực tuyến siêu cấp vip pro',
 };
+
+export const manrope = Manrope({
+  subsets: ['latin'],
+  variable: '--font-manrope',
+});
 
 export default function RootLayout({
   children,
@@ -21,23 +28,22 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={`${manrope.variable} `}>
+      <html lang="en">
+        <body className={manrope.className}>
           <ThemeProvider
+            disableTransitionOnChange
+            enableSystem
             attribute="class"
             defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
           >
-            {children}
+            <UserProvider>{children}</UserProvider>
             <SpeedInsights />
             <Analytics />
             <ToastContainer
               autoClose={2000}
-              hideProgressBar
+              bodyClassName="text-sm font-medium"
               position="top-right"
-              className="text-sm font-medium"
-            ></ToastContainer>
+            />
           </ThemeProvider>
         </body>
       </html>

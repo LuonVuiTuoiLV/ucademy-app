@@ -1,25 +1,10 @@
-import { EOrderStatus } from '@/components/types/enums';
-import { fetchOrders } from '@/lib/actions/order.actions';
-import OrderManage from './OrderManage';
+import { OrderManagePage } from '@/modules/order/pages';
+import { QuerySearchParams } from '@/shared/types';
 
-const page = async ({
-  searchParams,
-}: {
-  searchParams: {
-    page: number;
-    search: string;
-    status: EOrderStatus;
-  };
-}) => {
-  searchParams = await searchParams;
-  const orders = await fetchOrders({
-    page: searchParams.page || 1,
-    limit: 10,
-    search: searchParams.search,
-    status: searchParams.status,
-  });
+export interface OrderPageRootProps {}
 
-  return <OrderManage orders={orders}></OrderManage>;
-};
+function OrderPageRoot({ searchParams }: QuerySearchParams) {
+  return <OrderManagePage searchParams={searchParams} />;
+}
 
-export default page;
+export default OrderPageRoot;

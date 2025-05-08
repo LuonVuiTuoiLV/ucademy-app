@@ -1,22 +1,22 @@
 import PageNotFound from '@/app/not-found';
-import { getOrderDetails } from '@/lib/actions/order.actions';
+import { getOrderDetails } from '@/modules/order/actions/order.actions';
 
-const OrderDetails = async ({
-  params,
-}: {
+interface OrderDetailsPageRootProps {
   params: {
     code: string;
   };
-}) => {
-  params = await params;
+}
+const OrderDetailsPageRoot = async ({ params }: OrderDetailsPageRootProps) => {
   const orderDetails = await getOrderDetails({
     code: params.code,
   });
-  if (!orderDetails) return <PageNotFound></PageNotFound>;
+
+  if (!orderDetails) return <PageNotFound />;
+
   return (
     <div className="flex flex-col gap-5">
       <p>
-        Cảm ơn bạn đã mua khóa học{' '}
+        Cám ơn bạn đã mua khóa học{' '}
         <strong className="text-primary">{orderDetails.course.title}</strong>{' '}
         với số tiền là{' '}
         <strong className="text-primary">{orderDetails.total}</strong>
@@ -29,4 +29,4 @@ const OrderDetails = async ({
   );
 };
 
-export default OrderDetails;
+export default OrderDetailsPageRoot;

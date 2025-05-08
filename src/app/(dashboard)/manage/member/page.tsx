@@ -1,5 +1,7 @@
-const page = () => {
-	return <div>Mange users</div>;
-};
+export interface MemberPageRootProps {}
 
-export default page;
+function MemberPageRoot(_props: MemberPageRootProps) {
+  return <div>MemberPageRoot</div>;
+}
+
+export default MemberPageRoot;
