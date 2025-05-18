@@ -75,7 +75,7 @@ const VideoPlayer = ({
       } else {
         let muxId = null;
         const muxUrlMatch = currentActualUrl.match(
-          /player\.mux\.com\/([^\/?#&]+)/,
+          /player\.mux\.com\/([^\\/?#&]+)/,
         );
 
         if (muxUrlMatch && muxUrlMatch[1]) {
