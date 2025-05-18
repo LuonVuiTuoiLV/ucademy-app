@@ -177,10 +177,10 @@ const InfoPageContainer = () => {
 
               return 'Đang chuẩn bị...';
             },
-            allowedContent({ fileTypes, isUploading, ready, ...etc }) {
+            allowedContent({ isUploading, ready }) {
               if (!ready || isUploading) return null;
 
-              return `JPG, PNG, GIF (tối đa ${etc.maxFileSizeInMb || 4}MB)`;
+              return `JPG, PNG, GIF (tối đa ${4}MB)`;
             },
           }}
           onClientUploadComplete={(response) => {

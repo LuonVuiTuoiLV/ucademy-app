@@ -73,9 +73,7 @@ export async function getUserByIdForAdmin(
 ): Promise<(UserItemData & { banned?: boolean }) | null> {
   try {
     await connectToDatabase();
-    const user = await UserModel.findById(userId).lean();
-
-    console.log(' user:', user);
+    const user = await UserModel.findById(userId).lean<UserModelProps | null>();
 
     if (!user) {
       return null;
@@ -394,7 +392,7 @@ export async function updateUserProfileByAdmin(
       firstName?: string;
       lastName?: string;
       username?: string;
-      profileImageUrl?: string;
+      imageUrl?: string;
     } = {};
 
     if (
@@ -418,32 +416,32 @@ export async function updateUserProfileByAdmin(
     let newClerkAvatarUrl: string | null | undefined = undefined;
 
     if (updateData.avatar === null && clerkUserToUpdate.imageUrl) {
-      // Muốn xóa avatar
-      await clerkClient.users.deleteUserProfileImage(clerkId);
+      // Muốn xóa avatar, Clerk thường xử lý khi bạn set imageUrl là chuỗi rỗng hoặc gọi API xóa riêng
+      // await clerkClient.users.deleteUserProfileImage(clerkId); // Cách này rõ ràng hơn để xóa
+      clerkUpdatePayload.imageUrl = ''; // Hoặc cách Clerk yêu cầu để xóa ảnh
       newClerkAvatarUrl = null;
     } else if (
       updateData.avatar &&
       updateData.avatar !== clerkUserToUpdate.imageUrl
     ) {
-      // Muốn đổi avatar
-      await clerkClient.users.updateUser(clerkId, {
-        profileImageUrl: updateData.avatar,
-      });
-      const temporaryUser = await clerkClient.users.getUser(clerkId); // Lấy lại để có URL proxy
-
-      newClerkAvatarUrl = temporaryUser.imageUrl;
+      clerkUpdatePayload.imageUrl = updateData.avatar; // <-- SỬA THÀNH imageUrl
+      // newClerkAvatarUrl sẽ được lấy sau khi gọi API Clerk
     }
 
     // Cập nhật các trường khác (name, username) trên Clerk nếu có
     const otherClerkUpdates = { ...clerkUpdatePayload };
 
-    delete otherClerkUpdates.profileImageUrl; // Đã xử lý riêng
+    delete otherClerkUpdates.imageUrl; // Đã xử lý riêng
     if (Object.keys(otherClerkUpdates).length > 0) {
       await clerkClient.users.updateUser(clerkId, otherClerkUpdates);
     }
 
     // ---- Lấy lại thông tin đầy đủ từ Clerk sau tất cả các cập nhật ----
     const refreshedClerkUser = await clerkClient.users.getUser(clerkId);
+
+    if (newClerkAvatarUrl !== undefined) {
+      newClerkAvatarUrl = refreshedClerkUser.imageUrl;
+    }
 
     // ---- Dữ liệu để cập nhật trên Mongoose ----
     const mongooseUpdateData: Partial<UserModelProps> = {};
@@ -461,7 +459,8 @@ export async function updateUserProfileByAdmin(
     }
     // Cập nhật avatar trong DB bằng URL mới nhất từ Clerk
     if (newClerkAvatarUrl !== undefined) {
-      mongooseUpdateData.avatar = newClerkAvatarUrl;
+      mongooseUpdateData.avatar =
+        newClerkAvatarUrl === null ? undefined : newClerkAvatarUrl;
     } else if (
       refreshedClerkUser.imageUrl !== existingMongoUser?.avatar &&
       updateData.avatar !== undefined &&

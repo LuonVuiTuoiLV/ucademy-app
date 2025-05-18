@@ -23,6 +23,9 @@ const BadgeStatus = ({
     user: 'text-orange-500',
     expert: 'text-red-500',
     banned: 'text-red-500',
+    green:
+      'border-green-300 bg-green-50 text-green-700 dark:border-green-600 dark:bg-green-900/30 dark:text-green-400',
+    red: 'border-red-300 bg-red-50 text-red-700 dark:border-red-600 dark:bg-red-900/30 dark:text-red-400',
   };
 
   return (

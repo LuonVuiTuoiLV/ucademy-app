@@ -27,6 +27,7 @@ interface PopulatedLessonForComment {
 
 interface PopulatedUserForComment {
   name: string;
+  avatar: string;
 }
 
 export interface CommentItemData {
@@ -37,7 +38,7 @@ export interface CommentItemData {
   user: PopulatedUserForComment; // Sử dụng kiểu user đã populate
   created_at: string; // Date thường thành string sau stringify
   parentId?: string; // ObjectId cũng thành string
-  level?: number; // Giữ lại nếu có trong CommentModelProps gốc và cần dùng
+  level: number; // Giữ lại nếu có trong CommentModelProps gốc và cần dùng
   _destroy?: boolean; // Giữ lại nếu có trong CommentModelProps gốc và cần dùng
 }
 export type UpdateCommentParams = {

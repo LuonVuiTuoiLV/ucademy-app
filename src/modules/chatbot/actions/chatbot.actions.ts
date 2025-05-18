@@ -277,26 +277,12 @@ export async function askChatbot(
 
     const userMessageForLLM = userQuery + contextualPromptForUserMessage;
 
-    debugInfo.finalPromptToLLM = userMessageForLLM; // Chỉ phần user và context, system prompt xử lý riêng
+    debugInfo.finalUserMessageToLLM = userMessageForLLM; // Chỉ phần user và context, system prompt xử lý riêng
 
     // Xây dựng lịch sử để đưa vào chat, loại bỏ tin nhắn cuối cùng của user nếu nó giống userMessageForLLM (tránh lặp)
     const historyForChatAPI: Content[] = [...conversationHistory];
 
-    if (
-      historyForChatAPI.length > 0 &&
-      historyForChatAPI.at(-1).role === 'user'
-    ) {
-      const lastUserMessageInHistory = historyForChatAPI.at(-1).parts[0].text;
-
-      // Nếu câu hỏi hiện tại đã bao gồm trong tin nhắn cuối cùng của lịch sử (do cách client gửi) thì bỏ nó đi
-      if (userMessageForLLM.includes(lastUserMessageInHistory as string)) {
-        // Cẩn thận hơn: chỉ nên bỏ nếu lastUserMessageInHistory là một phần của userQuery gốc, không phải contextualPromptForUserMessage
-      }
-    }
-
     const chat = geminiModel.startChat({
-      history: historyForChatAPI, // Lịch sử các lượt trước đó
-      generationConfig,
       safetySettings,
       systemInstruction: {
         role: 'system',

@@ -371,7 +371,6 @@ const UpdateUserDetailContainer = ({
         </div>
       </div>
 
-      {/* Nút Ban/Unban Clerk */}
       <div className="mt-6">
         <Label>Trạng thái trên Clerk</Label>
         <div className="mt-1 flex items-center gap-3">

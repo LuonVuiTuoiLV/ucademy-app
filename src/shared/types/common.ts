@@ -17,7 +17,9 @@ export type BadgeStatusVariant =
   | 'user'
   | 'admin'
   | 'expert'
-  | 'banned';
+  | 'banned'
+  | 'green'
+  | 'red';
 export interface MenuField {
   url: string;
   title: string;
