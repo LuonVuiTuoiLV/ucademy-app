@@ -36,6 +36,7 @@ async function CourseDetailsContainer({
   const requirements = courseDetails.info.requirements || [];
   const benefits = courseDetails.info.benefits || [];
   const questionAnswers = courseDetails.info.qa || [];
+
   const courseDetailsMeta: {
     title: string;
     content: React.ReactNode;
@@ -57,6 +58,7 @@ async function CourseDetailsContainer({
       content: formatMinutesToHour(lessonInfo.duration),
     },
   ];
+
   const courseDetailsInfo: {
     title: string;
     content: React.ReactNode;
@@ -90,38 +92,50 @@ async function CourseDetailsContainer({
         />
       ),
     },
-    {
+  ];
+
+  // Thêm mục "Yêu cầu" CHỈ KHI requirements có nội dung
+  if (requirements.length > 0) {
+    courseDetailsInfo.push({
       title: 'Yêu cầu',
       content: requirements.map((item) => (
         <RequirementItem
-          key={item}
+          key={item} // Giả sử item là string duy nhất
           title={item}
         />
       )),
-    },
-    {
+    });
+  }
+
+  // Thêm mục "Lợi ích" CHỈ KHI benefits có nội dung
+  if (benefits.length > 0) {
+    courseDetailsInfo.push({
       title: 'Lợi ích',
       content: benefits.map((item) => (
         <BenefitItem
-          key={item}
+          key={item} // Giả sử item là string duy nhất
           title={item}
         />
       )),
-    },
-    {
+    });
+  }
+
+  // Thêm mục "Q.A" CHỈ KHI questionAnswers có nội dung
+  if (questionAnswers.length > 0) {
+    courseDetailsInfo.push({
       title: 'Q.A',
       content: (
         <div className="flex flex-col gap-5">
           {questionAnswers.map((item: CourseQAData) => (
             <QaItem
-              key={item.question}
+              key={item.question} // Giả sử item.question là duy nhất
               item={item}
             />
           ))}
         </div>
       ),
-    },
-  ];
+    });
+  }
 
   return (
     <div className="grid min-h-screen items-start gap-10 lg:grid-cols-[2fr,1fr]">
@@ -134,14 +148,14 @@ async function CourseDetailsContainer({
                 className="size-full object-fill"
                 height="480"
                 src={`https://www.youtube.com/embed/${videoId}`}
-                title="BLACK MYTH WUKONG New Insane Combat Preview and Gameplay Demo | EXCLUSIVE PS5 and PC Launch"
+                title={courseDetails.title || 'Course Video'}
                 width="853"
               />
             </>
           ) : (
             <Image
               fill
-              alt=""
+              alt={courseDetails.title || 'Course Image'}
               className="size-full rounded-lg object-cover"
               src={courseDetails.image}
             />

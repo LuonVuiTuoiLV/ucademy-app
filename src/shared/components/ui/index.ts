@@ -10,6 +10,7 @@ export * from './input-format';
 export * from './label';
 export * from './popover';
 export * from './radio-group';
+export * from './rainbow-button';
 export * from './select';
 export * from './switch';
 export * from './table';

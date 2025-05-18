@@ -50,6 +50,7 @@ export async function fetchOrders(
       })
       .populate({
         path: 'coupon',
+        model: CouponModel,
         select: 'code',
       })
       .sort({ created_at: -1 })

@@ -9,11 +9,20 @@ export interface QuerySearchParams {
   searchParams: QueryFilter;
 }
 export type QuerySortFilter = 'recent' | 'oldest';
-export type BadgeStatusVariant = 'default' | 'success' | 'warning' | 'danger';
+export type BadgeStatusVariant =
+  | 'default'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'user'
+  | 'admin'
+  | 'expert'
+  | 'banned';
 export interface MenuField {
   url: string;
   title: string;
   icon: React.ReactNode;
   onlyIcon?: boolean;
+  isManageItem?: boolean;
 }
 export type RatingIcon = 'awesome' | 'good' | 'meh' | 'bad' | 'terrible';

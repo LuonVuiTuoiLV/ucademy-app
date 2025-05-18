@@ -105,9 +105,9 @@ const UpdateCouponContainer = ({
   const handleSearchCourse = debounce(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-      const courseList = await fetchCourses({ search: value });
+      const data = await fetchCourses({ search: value });
 
-      setFindCourse(courseList);
+      setFindCourse(data?.courseList);
       if (!value) setFindCourse([]);
     },
     250,
@@ -292,6 +292,7 @@ const UpdateCouponContainer = ({
                       />
                     ) : (
                       <InputFormatCurrency
+                        placeholder="599.000"
                         {...field}
                         onChange={(event) => field.onChange(event.target.value)}
                       />

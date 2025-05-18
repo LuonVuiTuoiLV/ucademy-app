@@ -58,11 +58,11 @@ const CommentForm = ({
 
     startTransition(() => {
       if (!hasComment) {
-        toast.error('Failed to post comment');
+        toast.error('Bịnh luận của bạn không thể đăng...');
 
         return;
       }
-      toast.success('Comment posted successfully');
+      toast.success('Bạn đăng bình luận thành công...');
       commentForm.setValue('content', '');
       closeReply?.();
     });

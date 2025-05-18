@@ -6,7 +6,7 @@ export interface CreateCouponPageRootProps {}
 function CreateCouponPageRoot(_props: CreateCouponPageRootProps) {
   return (
     <>
-      <Heading>Create Coupon</Heading>
+      <Heading>Tạo Mã Giảm Giá</Heading>
       <CreateCouponPage />
     </>
   );

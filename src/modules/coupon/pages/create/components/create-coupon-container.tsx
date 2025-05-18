@@ -98,9 +98,9 @@ const CreateCouponContainer = () => {
   const handleSearchCourse = debounce(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-      const courseList = await fetchCourses({ search: value });
+      const data = await fetchCourses({ search: value });
 
-      setFindCourse(courseList);
+      setFindCourse(data?.courseList);
       if (!value) setFindCourse([]);
     },
     250,

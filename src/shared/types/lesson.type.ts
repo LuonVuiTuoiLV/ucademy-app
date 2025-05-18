@@ -21,6 +21,7 @@ export type UpdateLessonParams = {
     duration?: number;
     video_url?: string;
     content?: string;
+    _destroy?: boolean;
   };
   path?: string;
 };

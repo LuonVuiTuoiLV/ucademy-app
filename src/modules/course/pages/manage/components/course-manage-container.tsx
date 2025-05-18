@@ -41,13 +41,11 @@ const CourseManageContainer = ({
 
   const handleDeleteCourse = (slug: string) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      title: 'Bạn có chắc muốn xóa khóa học không ?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Đồng ý',
+      cancelButtonText: 'Đóng',
     }).then(async (result) => {
       if (result.isConfirmed) {
         await updateCourse({
@@ -112,12 +110,12 @@ const CourseManageContainer = ({
             <SelectContent>
               <SelectGroup>
                 <SelectItem value={allValue}>Tất cả</SelectItem>
-                {courseStatus.map((status) => (
+                {courseStatus.map((Status) => (
                   <SelectItem
-                    key={status.value}
-                    value={status.value}
+                    key={Status.value}
+                    value={Status.value}
                   >
-                    {status.title}
+                    {Status.title}
                   </SelectItem>
                 ))}
               </SelectGroup>

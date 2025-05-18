@@ -35,19 +35,18 @@ export async function createLesson(params: CreateLessonParams) {
 export async function updateLesson(params: UpdateLessonParams) {
   try {
     connectToDatabase();
-    const reponse = await LessonModel.findByIdAndUpdate(
+    const response = await LessonModel.findByIdAndUpdate(
       params.lessonId,
       params.updateData,
       { new: true },
     );
 
     revalidatePath(params.path || '/');
-    if (!reponse) return;
+    if (!response) return;
 
     return {
       success: true,
     };
-    revalidatePath(params.path || '/');
   } catch (error) {
     console.log(error);
   }
@@ -101,7 +100,6 @@ export async function countLessonByCourseId({
     console.log(error);
   }
 }
-
 export async function updateLessonOrder({
   lessonId,
   order,
@@ -114,8 +112,6 @@ export async function updateLessonOrder({
   try {
     connectToDatabase();
     const findLesson = await LessonModel.findById(lessonId);
-
-    console.log('findLesson:', findLesson);
 
     if (!findLesson) return;
     findLesson.order = order;

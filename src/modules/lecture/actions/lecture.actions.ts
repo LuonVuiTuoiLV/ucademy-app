@@ -18,7 +18,7 @@ export async function createLecture(params: CreateLectureParams) {
     revalidatePath(params.path || '/');
 
     return {
-      sucess: true,
+      success: true,
     };
   } catch (error) {
     console.log(error);

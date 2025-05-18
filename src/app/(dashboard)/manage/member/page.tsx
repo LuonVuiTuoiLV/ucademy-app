@@ -1,7 +1,10 @@
-export interface MemberPageRootProps {}
+import UserManagePage from '@/modules/user/pages/manage/user-manage-page';
+import { QuerySearchParams } from '@/shared/types';
 
-function MemberPageRoot(_props: MemberPageRootProps) {
-  return <div>MemberPageRoot</div>;
+export interface ManageUserPageRootProps {}
+
+function ManageUserPageRoot({ searchParams }: QuerySearchParams) {
+  return <UserManagePage searchParams={searchParams} />;
 }
 
-export default MemberPageRoot;
+export default ManageUserPageRoot;

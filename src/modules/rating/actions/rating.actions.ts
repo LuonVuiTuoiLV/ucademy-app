@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 
 import { RatingStatus } from '@/shared/constants';
 import { connectToDatabase } from '@/shared/lib/mongoose';
-import { CourseModel, RatingModel } from '@/shared/schemas';
+import { CourseModel, RatingModel, UserModel } from '@/shared/schemas';
 import { QueryFilter, RatingItemData } from '@/shared/types';
 import { CreateRatingParams } from '@/shared/types/rating.type';
 
@@ -86,10 +86,12 @@ export async function fetchRatings(
     const ratings = await RatingModel.find(query)
       .populate({
         path: 'course',
+        model: CourseModel,
         select: 'title slug',
       })
       .populate({
         path: 'user',
+        model: UserModel,
         select: 'name',
       })
       .skip(skip)

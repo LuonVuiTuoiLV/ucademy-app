@@ -4,7 +4,7 @@ import { FilterQuery } from 'mongoose';
 import { revalidatePath } from 'next/cache';
 
 import { connectToDatabase } from '@/shared/lib/mongoose';
-import { CouponModel } from '@/shared/schemas';
+import { CouponModel, CourseModel } from '@/shared/schemas';
 import {
   CouponItemData,
   CreateCouponParams,
@@ -69,6 +69,11 @@ export async function getCoupons(params: QueryFilter): Promise<
       query.active = Boolean(Number(isActive));
     }
     const coupons = await CouponModel.find(query)
+      .populate({
+        path: 'courses',
+        model: CourseModel,
+        select: 'title',
+      })
       .skip(skip)
       .limit(limit)
       .sort({ created_at: -1 });

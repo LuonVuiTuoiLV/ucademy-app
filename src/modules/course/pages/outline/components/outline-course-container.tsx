@@ -48,7 +48,7 @@ const OutlineCourseContainer = ({ course }: OutlineCourseContainerProps) => {
         path: `/manage/course/update-content?slug=${course.slug}`,
       });
 
-      if (response?.sucess) {
+      if (response?.success) {
         toast.success('Thêm chương mới thành công!');
       }
     } catch (error) {
@@ -63,13 +63,11 @@ const OutlineCourseContainer = ({ course }: OutlineCourseContainerProps) => {
     event.stopPropagation();
     try {
       Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Bạn có chắc muốn xóa khóa học không ?',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Đồng ý',
+        cancelButtonText: 'Đóng',
       }).then(async (result) => {
         if (result.isConfirmed) {
           await updateLecture({

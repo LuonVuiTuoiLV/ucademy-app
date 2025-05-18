@@ -36,7 +36,12 @@ function CreateCourseContainer() {
   });
 
   async function onSubmit(values: CourseCreateFormValues) {
-    if (!userInfo) return;
+    if (!userInfo) {
+      toast.error('Vui lòng đăng nhập để tạo khóa học');
+      router.push('/login'); // hoặc trang đăng nhập phù hợp
+
+      return;
+    }
     setIsSubmitting(true);
     try {
       const data = {

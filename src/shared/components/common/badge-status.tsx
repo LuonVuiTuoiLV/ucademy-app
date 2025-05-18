@@ -19,6 +19,10 @@ const BadgeStatus = ({
     success: 'text-green-500',
     warning: 'text-orange-500',
     danger: 'text-red-500',
+    admin: 'text-green-500',
+    user: 'text-orange-500',
+    expert: 'text-red-500',
+    banned: 'text-red-500',
   };
 
   return (

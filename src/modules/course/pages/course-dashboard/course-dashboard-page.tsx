@@ -1,12 +1,32 @@
-import { fetchCourses } from '../../actions';
+import { fetchCourses } from '@/modules/course/actions'; // Đảm bảo đường dẫn đúng
+import { ITEMS_PER_PAGE } from '@/shared/constants';
+import { QuerySearchParams } from '@/shared/types';
+
 import CourseDashboardContainer from './components';
 
-export interface CourseDashboardPageProps {}
+export default async function CourseDashboardPage({
+  searchParams,
+}: QuerySearchParams) {
+  const currentPage = Number(searchParams?.page);
+  const searchTerm = searchParams?.search || '';
 
-async function CourseDashboardPage(_props: CourseDashboardPageProps) {
-  const courseList = (await fetchCourses({})) || [];
+  const data = await fetchCourses({
+    page: currentPage,
+    limit: ITEMS_PER_PAGE,
+    search: searchTerm,
+  });
 
-  return <CourseDashboardContainer courseList={courseList} />;
+  const courseList = data?.courseList || [];
+  const totalCourses = data?.total || 0;
+  const totalPages = Math.ceil(totalCourses / ITEMS_PER_PAGE);
+
+  return (
+    <CourseDashboardContainer
+      courseList={courseList}
+      currentPage={currentPage}
+      initialSearchTerm={searchTerm}
+      totalCourses={totalCourses}
+      totalPages={totalPages}
+    />
+  );
 }
-
-export default CourseDashboardPage;

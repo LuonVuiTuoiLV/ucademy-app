@@ -24,7 +24,7 @@ const TableActionItem = ({ onClick, type, url }: TableActionItemProps) => {
   };
 
   const className =
-    'size-8 rounded-md border flex items-center justify-center p-2  text-gray-500 hover:border-opacity-80 dark:bg-transparent borderDarkMode dark:hover:border-opacity-20';
+    'size-8 rounded-md border flex items-center justify-center p-2 text-gray-400 hover:border-opacity-90 dark:bg-transparent borderDarkMode dark:hover:border-opacity-40';
 
   if (url)
     return (

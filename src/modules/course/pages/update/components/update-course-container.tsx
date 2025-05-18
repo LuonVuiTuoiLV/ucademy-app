@@ -20,6 +20,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  InputFormatCurrency,
   Select,
   SelectContent,
   SelectItem,
@@ -181,13 +182,10 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
               <FormItem>
                 <FormLabel>Giá khuyến mãi</FormLabel>
                 <FormControl>
-                  <Input
+                  <InputFormatCurrency
                     placeholder="599.000"
-                    type="number"
                     {...field}
-                    onChange={(event) =>
-                      field.onChange(Number(event.target.value))
-                    }
+                    onChange={(event) => field.onChange(event.target.value)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -201,13 +199,10 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
               <FormItem>
                 <FormLabel>Giá gốc</FormLabel>
                 <FormControl>
-                  <Input
+                  <InputFormatCurrency
                     placeholder="999.000"
-                    type="number"
                     {...field}
-                    onChange={(event) =>
-                      field.onChange(Number(event.target.value))
-                    }
+                    onChange={(event) => field.onChange(event.target.value)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -239,7 +234,7 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
                 <FormLabel>Ảnh đại diện</FormLabel>
                 <FormControl>
                   <>
-                    <div className="relative flex h-[250px] items-center justify-center rounded-md border border-gray-200 bg-white">
+                    <div className="bgDarkMode borderDarkMode relative flex h-[250px] items-center justify-center rounded-md border border-gray-200 bg-white">
                       {imageWatch ? (
                         <Image
                           fill
@@ -251,7 +246,6 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
                         <UploadButton
                           endpoint="imageUploader"
                           onClientUploadComplete={(response) => {
-                            // Do something with the response
                             form.setValue('image', response[0].url);
                           }}
                           onUploadError={(error: Error) => {

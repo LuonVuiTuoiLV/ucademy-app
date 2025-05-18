@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { toast } from 'react-toastify';
 import slugify from 'slugify';
+import Swal from 'sweetalert2';
 
 import { updateLesson } from '@/modules/lesson/actions';
 import {
@@ -83,7 +84,32 @@ export default function OutlineDraggableContent({
       console.log(error);
     }
   };
-
+  const handleDeleteLesson = async (
+    event: MouseEvent<HTMLSpanElement>,
+    lessonId: string,
+  ) => {
+    event.stopPropagation();
+    try {
+      Swal.fire({
+        title: 'Bạn có chắc muốn xóa bài học không?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Đồng ý',
+        cancelButtonText: 'Đóng',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await updateLesson({
+            lessonId,
+            updateData: {
+              _destroy: true,
+            },
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // Handle drag lesson in lecture only
   // const handleDragEnd = async ({ active, over }: DragEndEvent) => {
   //   if (over && active.id !== over?.id) {
@@ -175,7 +201,12 @@ export default function OutlineDraggableContent({
                             >
                               <IconEdit />
                             </OutlineAction>
-                            <OutlineAction variant="danger">
+                            <OutlineAction
+                              variant="danger"
+                              onClick={(event) =>
+                                handleDeleteLesson(event, lesson._id)
+                              }
+                            >
                               <IconDelete />
                             </OutlineAction>
                             <OutlineDraggableHandle />

@@ -9,11 +9,16 @@ import { Manrope } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
 
 import { ThemeProvider } from '@/shared/components/common';
+import { ConditionalChatLayout } from '@/shared/components/layout';
 import { UserProvider } from '@/shared/contexts';
 
 export const metadata: Metadata = {
   title: 'Ucademy',
   description: 'Nền tảng học lập trình trực tuyến siêu cấp vip pro',
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+  },
 };
 
 export const manrope = Manrope({
@@ -28,15 +33,20 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={manrope.className}>
+      <html
+        suppressHydrationWarning
+        lang="vi"
+      >
+        <body className={`${manrope.variable} `}>
           <ThemeProvider
             disableTransitionOnChange
             enableSystem
             attribute="class"
             defaultTheme="system"
           >
-            <UserProvider>{children}</UserProvider>
+            <UserProvider>
+              <ConditionalChatLayout>{children}</ConditionalChatLayout>
+            </UserProvider>
             <SpeedInsights />
             <Analytics />
             <ToastContainer

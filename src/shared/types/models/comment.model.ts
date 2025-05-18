@@ -11,4 +11,5 @@ export interface CommentModelProps extends Document {
   created_at: Date;
   parentId?: Schema.Types.ObjectId;
   level: number;
+  _destroy: boolean;
 }

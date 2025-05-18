@@ -1,6 +1,10 @@
 import { LectureItemData } from './lecture.type';
-import { CouponModelProps, CourseModelProps, RatingModelProps } from './models';
-import { UserItemData } from './user.type';
+import {
+  CouponModelProps,
+  CourseModelProps,
+  RatingModelProps,
+  UserModelProps,
+} from './models';
 
 export interface RatingItemData
   extends Omit<RatingModelProps, 'course' | 'user'> {
@@ -15,4 +19,8 @@ export interface CourseItemData
 }
 export interface CouponItemData extends Omit<CouponModelProps, 'courses'> {
   courses: CourseItemData[];
+}
+export interface UserItemData extends Omit<UserModelProps, 'courses'> {
+  courses: CourseItemData[];
+  banned?: string;
 }

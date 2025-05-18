@@ -44,14 +44,17 @@ async function CourseLessonPlayer({
         courseId={courseId}
         nextLesson={nextLessonUrl}
         prevLesson={previousLessonUrl}
+        videoUrl={lessonDetails}
       />
 
       <Heading className="mb-10">{lessonDetails.title}</Heading>
-      <div className="bgDarkMode borderDarkMode entry-content rounded-lg border p-5">
-        <div
-          dangerouslySetInnerHTML={{ __html: lessonDetails.content || '' }}
-        />
-      </div>
+      {!!lessonDetails.content && (
+        <div className="bgDarkMode borderDarkMode entry-content rounded-lg border p-5">
+          <div
+            dangerouslySetInnerHTML={{ __html: lessonDetails.content || '' }}
+          />
+        </div>
+      )}
     </div>
   );
 }

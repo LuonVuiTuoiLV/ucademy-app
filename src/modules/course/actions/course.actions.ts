@@ -21,12 +21,16 @@ import {
   UpdateCourseParams,
 } from '@/shared/types';
 
-export async function fetchCourses(
-  params: QueryFilter,
-): Promise<CourseItemData[] | undefined> {
+export async function fetchCourses(params: QueryFilter): Promise<
+  | {
+      courseList: CourseItemData[] | undefined;
+      total: number;
+    }
+  | undefined
+> {
   try {
     connectToDatabase();
-    const { limit = 10, page = 1, search } = params;
+    const { limit = 10, page = 1, search, status } = params;
     const skip = (page - 1) * limit;
     const query: FilterQuery<typeof CourseModel> = {};
 
@@ -34,12 +38,19 @@ export async function fetchCourses(
       query.$or = [{ title: { $regex: search, $options: 'i' } }];
     }
     query.status = CourseStatus.APPROVED;
-    const courses = await CourseModel.find(query)
+    if (status) {
+      query.status = status;
+    }
+    const courseList = await CourseModel.find(query)
       .skip(skip)
       .limit(limit)
       .sort({ created_at: -1 });
+    const total = await CourseModel.countDocuments(query);
 
-    return JSON.parse(JSON.stringify(courses));
+    return {
+      courseList: JSON.parse(JSON.stringify(courseList)),
+      total,
+    };
   } catch (error) {
     console.log(error);
   }
@@ -163,7 +174,6 @@ export async function createCourse(params: CreateCourseParams) {
   }
 }
 export async function updateCourse(params: UpdateCourseParams) {
-  console.log('updateCourse ~ params:', params);
   try {
     connectToDatabase();
     const findCourse = await CourseModel.findOne({ slug: params.slug });
@@ -209,9 +219,11 @@ export async function getCourseLessonsInfo({
     const course: CourseItemData = await CourseModel.findOne({ slug })
       .select('lectures')
       .populate({
+        model: LectureModel,
         path: 'lectures',
         select: 'lessons',
         populate: {
+          model: LessonModel,
           path: 'lessons',
           select: 'duration',
         },

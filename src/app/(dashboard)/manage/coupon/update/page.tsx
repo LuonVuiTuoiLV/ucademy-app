@@ -10,7 +10,7 @@ export interface UpdateCouponPageRootProps {
 function UpdateCouponPageRoot({ searchParams }: UpdateCouponPageRootProps) {
   return (
     <>
-      <Heading>Update coupon</Heading>
+      <Heading>Cập Nhật Mã Giảm Giá</Heading>
       <UpdateCouponPage code={searchParams.code} />;
     </>
   );
