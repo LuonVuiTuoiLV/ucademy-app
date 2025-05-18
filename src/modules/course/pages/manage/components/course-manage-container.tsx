@@ -8,6 +8,7 @@ import {
   BadgeStatus,
   BouncedLink,
   Heading,
+  Pagination,
   TableAction,
   TableActionItem,
 } from '@/shared/components/common';
@@ -32,10 +33,14 @@ import { CourseItemData } from '@/shared/types';
 
 interface CourseManageContainerProps {
   courses?: CourseItemData[];
+  total: number;
+  totalPages: number;
 }
 
 const CourseManageContainer = ({
   courses = [],
+  total,
+  totalPages,
 }: CourseManageContainerProps) => {
   const { handleSearchData, handleSelectStatus } = useQueryString();
 
@@ -201,6 +206,10 @@ const CourseManageContainer = ({
             })}
         </TableBody>
       </Table>
+      <Pagination
+        total={total}
+        totalPages={totalPages}
+      />
     </>
   );
 };

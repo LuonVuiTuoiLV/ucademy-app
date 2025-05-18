@@ -40,8 +40,8 @@ import { UploadButton } from '@/shared/utils/uploadthing';
 const formSchema = z.object({
   title: z.string().min(10, 'Tên khóa học phải có ít nhất 10 ký tự'),
   slug: z.string().optional(),
-  price: z.number().int().positive().optional(),
-  sale_price: z.number().int().positive().optional(),
+  price: z.string().optional(),
+  sale_price: z.string().optional(),
   intro_url: z.string().optional(),
   desc: z.string().optional(),
   image: z.string().optional(),
@@ -82,8 +82,8 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
     defaultValues: {
       title: course.title,
       slug: course.slug,
-      price: course.price,
-      sale_price: course.sale_price,
+      price: course.price.toString(),
+      sale_price: course.sale_price.toString(),
       intro_url: course.intro_url,
       desc: course.desc,
       image: course.image,
@@ -100,14 +100,16 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
+    const priceValue = Number(values.price?.replace(/,/g, ''));
+    const salePriceValue = Number(values.sale_price?.replace(/,/g, ''));
     try {
       const response = await updateCourse({
         slug: course.slug,
         updateData: {
           title: values.title,
           slug: values.slug,
-          price: values.price,
-          sale_price: values.sale_price,
+          price: priceValue,
+          sale_price: salePriceValue,
           intro_url: values.intro_url,
           desc: values.desc,
           views: values.views,
@@ -127,6 +129,7 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
       }
       if (response?.success) {
         toast.success(response.message);
+        router.push('/manage/course');
       }
     } catch (error) {
       console.log(error);

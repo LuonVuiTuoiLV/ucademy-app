@@ -27,6 +27,13 @@ export const menuItems: MenuField[] = [
     url: '/coupon',
     title: 'Săn mã giảm giá',
     icon: <IconMoney className="size-5" />,
+    isNew: true,
+  },
+  {
+    url: '/user',
+    title: 'Sắp ra mắt',
+    icon: <IconUser className="size-5" />,
+    isHot: true,
   },
   {
     url: '/user',

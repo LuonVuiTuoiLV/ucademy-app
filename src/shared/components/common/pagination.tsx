@@ -101,7 +101,7 @@ const Pagination = ({ total, totalPages }: PaginationProps) => {
         {IconLeft}
       </PaginationButton>
       <input
-        className="h-10 w-20 rounded-full bg-white px-2 text-center font-medium outline-none"
+        className="hover-primary h-10 w-20 rounded-full border border-gray-200 px-2 text-center font-medium outline-none transition-all hover:!border-primary disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-opacity-10 dark:bg-grayDarker dark:disabled:bg-grayDarkest"
         placeholder="1"
         type="number"
         value={currentPage}
@@ -134,7 +134,7 @@ function PaginationButton({
   onClick,
 }: PaginationButtonProps) {
   const paginationButtonClassNames =
-    'size-10 rounded-full bg-white shadow-sm p-2 flex items-center justify-center disabled:bg-gray-200';
+    'size-10 rounded-full hover-primary border border-gray-200 transition-all hover:!border-primary disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-opacity-10 dark:bg-grayDarker dark:disabled:bg-grayDarkest shadow-sm p-2 flex items-center justify-center ';
 
   return (
     <button

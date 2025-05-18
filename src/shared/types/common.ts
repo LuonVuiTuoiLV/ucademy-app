@@ -26,5 +26,7 @@ export interface MenuField {
   icon: React.ReactNode;
   onlyIcon?: boolean;
   isManageItem?: boolean;
+  isNew?: boolean;
+  isHot?: boolean;
 }
 export type RatingIcon = 'awesome' | 'good' | 'meh' | 'bad' | 'terrible';

@@ -5,6 +5,7 @@ export * from './checkbox';
 export * from './dialog';
 export * from './dropdown-menu';
 export * from './form';
+export * from './gradient-text';
 export * from './input';
 export * from './input-format';
 export * from './label';

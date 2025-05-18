@@ -40,5 +40,6 @@ export const editorOptions = (field: any, theme: any) => ({
 });
 export const lastLessonKey = 'lastLesson';
 export const allValue = 'ALL';
-export const ITEMS_PER_PAGE = 10;
+export const ITEMS_PER_PAGE = 5;
+export const ITEMS_PER_PAGES_ROOT = 8;
 export const MAX_COMMENT_LEVEL = 3;

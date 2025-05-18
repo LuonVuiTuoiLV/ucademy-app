@@ -83,6 +83,11 @@ const config: Config = {
           '0%': { backgroundPosition: '0% 50%' }, // Bắt đầu từ vị trí 0%
           '100%': { backgroundPosition: '200% 50%' },
         },
+        gradient: {
+          to: {
+            'background-position': 'var(--bg-size, 300%) 0',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -90,6 +95,7 @@ const config: Config = {
         shine: 'shine var(--duration) infinite linear',
         aurora: 'aurora 8s ease-in-out infinite alternate',
         rainbow: 'rainbow var(--speed, 2s) infinite linear;',
+        gradient: 'gradient 8s linear infinite',
       },
     },
   },

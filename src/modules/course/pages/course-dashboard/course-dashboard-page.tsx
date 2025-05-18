@@ -1,5 +1,5 @@
 import { fetchCourses } from '@/modules/course/actions'; // Đảm bảo đường dẫn đúng
-import { ITEMS_PER_PAGE } from '@/shared/constants';
+import { ITEMS_PER_PAGES_ROOT } from '@/shared/constants';
 import { QuerySearchParams } from '@/shared/types';
 
 import CourseDashboardContainer from './components';
@@ -12,13 +12,13 @@ export default async function CourseDashboardPage({
 
   const data = await fetchCourses({
     page: currentPage,
-    limit: ITEMS_PER_PAGE,
+    limit: ITEMS_PER_PAGES_ROOT,
     search: searchTerm,
   });
 
   const courseList = data?.courseList || [];
   const totalCourses = data?.total || 0;
-  const totalPages = Math.ceil(totalCourses / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalCourses / ITEMS_PER_PAGES_ROOT);
 
   return (
     <CourseDashboardContainer
