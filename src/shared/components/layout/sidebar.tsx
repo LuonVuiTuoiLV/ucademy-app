@@ -21,7 +21,7 @@ function Sidebar() {
       return [];
     }
     if (userInfo?.role === 'ADMIN') {
-      return menuItems; // Admin thấy tất cả
+      return menuItems;
     }
 
     return menuItems.filter((item) => !item.isManageItem);

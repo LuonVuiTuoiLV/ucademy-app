@@ -1,4 +1,5 @@
 import {
+  IconBlink,
   IconComment,
   IconCoupon,
   IconExplore,
@@ -32,7 +33,7 @@ export const menuItems: MenuField[] = [
   {
     url: '/user',
     title: 'Sắp ra mắt',
-    icon: <IconUser className="size-5" />,
+    icon: <IconBlink className="size-5" />,
     isHot: true,
   },
   {
