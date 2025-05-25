@@ -60,9 +60,13 @@ const CourseItem = ({
             ))}
             <CourseItemDuration slug={data.slug} />
 
-            <span className="ml-auto text-base font-bold text-primary">
-              {data.price.toLocaleString()}đ
-            </span>
+            {data.is_free ? (
+              ''
+            ) : (
+              <span className="ml-auto text-base font-bold text-primary">
+                {data.price.toLocaleString()}đ
+              </span>
+            )}
           </div>
 
           <Link

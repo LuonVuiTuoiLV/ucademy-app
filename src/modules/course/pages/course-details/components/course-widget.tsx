@@ -14,6 +14,7 @@ interface CourseWidgetProps {
   duration: string;
 }
 const CourseWidget = ({ data, duration }: CourseWidgetProps) => {
+  console.log(' data:', data);
   const [price, setPrice] = useState<number>(data.price);
   const [coupon, setCoupon] = useState('');
   const { userInfo } = useUserContext();
@@ -38,22 +39,24 @@ const CourseWidget = ({ data, duration }: CourseWidgetProps) => {
     <>
       <div className="bgDarkMode borderDarkMode rounded-lg border p-5">
         <div className="mb-3 flex items-center gap-2">
-          <strong className="text-xl font-bold text-primary">
-            {price.toLocaleString('en-EN')}
-          </strong>
-          <span className="text-sm text-slate-400 line-through">
-            {data.sale_price.toLocaleString('en-EN')}
-          </span>
-          <span className="ml-auto inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-            {Math.floor((data.price / data.sale_price) * 100)}%
-          </span>
+          {data.is_free ? (
+            ''
+          ) : (
+            <>
+              <strong className="text-lg font-bold text-primary lg:text-2xl">
+                {price.toLocaleString('en-EN')}
+              </strong>
+              <span className="text-sm text-slate-400 line-through lg:text-lg">
+                {data.sale_price.toLocaleString('en-EN')}
+              </span>
+              <span className="ml-auto inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm font-bold text-primary lg:text-lg">
+                -{Math.floor((data.price / data.sale_price) * 100)}%
+              </span>
+            </>
+          )}
         </div>
         <h3 className="mb-3 text-sm font-bold">Khóa học gồm có:</h3>
         <ul className="mb-5 flex flex-col gap-2 text-sm text-slate-500">
-          <li className="flex items-center gap-2">
-            <IconPlay className="size-4" />
-            <span>{duration} học</span>
-          </li>
           <li className="flex items-center gap-2">
             <IconPlay className="size-4" />
             <span>Video Full HD</span>
@@ -71,13 +74,17 @@ const CourseWidget = ({ data, duration }: CourseWidgetProps) => {
           amount={price}
           coupon={coupon}
           courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
+          status={data.status}
+          isFree={data.is_free}
         />
-        <CouponForm
-          courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
-          originalPrice={data.price}
-          setCouponId={setCoupon}
-          setPrice={setPrice}
-        />
+        {!data.is_free && (
+          <CouponForm
+            courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
+            originalPrice={data.price}
+            setCouponId={setCoupon}
+            setPrice={setPrice}
+          />
+        )}
       </div>
     </>
   );

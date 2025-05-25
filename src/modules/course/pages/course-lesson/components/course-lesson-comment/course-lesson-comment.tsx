@@ -36,7 +36,7 @@ async function CourseLessonComment({
         <div className="mt-10 flex flex-col gap-10">
           <div className="flex items-center justify-between">
             <h2 className="flex items-center gap-2 text-xl font-bold">
-              <span>Comments</span>
+              <span>Bình luận</span>
               <span className="flex items-center justify-center rounded-full bg-primary px-4 py-0.5 text-sm font-semibold text-white">
                 {comments?.length}
               </span>

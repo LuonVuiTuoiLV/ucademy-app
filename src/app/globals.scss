@@ -135,6 +135,34 @@
     width: 100%;
   }
 }
+
+.button-gradient {
+  background: linear-gradient(
+    90deg,
+    rgba(243, 202, 77, 0.2),
+    rgba(255, 151, 154, 0.2) 45.3125%,
+    rgba(221, 165, 227, 0.2) 82.3125%,
+    rgba(203, 171, 255, 0.2)
+  );
+  position: relative;
+  padding: 0.25rem;
+  font-weight: 700;
+  height: 48px;
+}
+.button-inside {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f3ca4d, #ff979a 45.3125%, #cbabff);
+  height: 2.5rem;
+  padding: 1px;
+}
+.button-main {
+  height: 38px;
+  flex: 1 0 0px;
+}
+
 html body .swal2-container {
   .swal2-popup {
     @apply w-full;

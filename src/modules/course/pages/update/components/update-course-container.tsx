@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useImmer } from 'use-immer';
@@ -26,6 +26,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Switch,
   Textarea,
 } from '@/shared/components/ui';
 import {
@@ -37,39 +38,62 @@ import {
 import { CourseItemData } from '@/shared/types';
 import { UploadButton } from '@/shared/utils/uploadthing';
 
-const formSchema = z.object({
-  title: z.string().min(10, 'Tên khóa học phải có ít nhất 10 ký tự'),
-  slug: z.string().optional(),
-  price: z.string().optional(),
-  sale_price: z.string().optional(),
-  intro_url: z.string().optional(),
-  desc: z.string().optional(),
-  image: z.string().optional(),
-  views: z.number().int().optional(),
-  status: z
-    .enum([CourseStatus.APPROVED, CourseStatus.PENDING, CourseStatus.REJECTED])
-    .optional(),
-  level: z
-    .enum([
-      CourseLevel.BEGINNER,
-      CourseLevel.INTERMEDIATE,
-      CourseLevel.ADVANCED,
-    ])
-    .optional(),
-  info: z.object({
-    requirements: z.array(z.string()).optional(),
-    benefits: z.array(z.string()).optional(),
-    qa: z
-      .array(z.object({ question: z.string(), answer: z.string() }))
+const formSchema = z
+  .object({
+    title: z.string().min(10, 'Tên khóa học phải có ít nhất 10 ký tự'),
+    slug: z.string().optional(),
+    price: z.string().optional(),
+    sale_price: z.string().optional(),
+    intro_url: z.string().optional(),
+    desc: z.string().optional(),
+    is_free: z.boolean().optional(),
+    image: z.string().optional(),
+    views: z.number().int().optional(),
+    status: z
+      .enum([
+        CourseStatus.APPROVED,
+        CourseStatus.PENDING,
+        CourseStatus.COMING_SOON,
+        CourseStatus.REJECTED,
+      ])
       .optional(),
-  }),
-});
+    level: z
+      .enum([
+        CourseLevel.BEGINNER,
+        CourseLevel.INTERMEDIATE,
+        CourseLevel.ADVANCED,
+      ])
+      .optional(),
+    info: z.object({
+      requirements: z.array(z.string()).optional(),
+      benefits: z.array(z.string()).optional(),
+      qa: z
+        .array(z.object({ question: z.string(), answer: z.string() }))
+        .optional(),
+    }),
+  })
+  .refine(
+    (data) => {
+      if (
+        data.is_free === false &&
+        (!data.price || data.price === '0' || data.price === '')
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Khóa học không miễn phí phải có giá',
+      path: ['price'],
+    },
+  );
 
 interface UpdateCourseContainerProps {
   course: CourseItemData;
 }
 
 const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
+  console.log(' course:', course);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [courseInfo, setCourseInfo] = useImmer({
@@ -84,6 +108,7 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
       slug: course.slug,
       price: course.price.toString(),
       sale_price: course.sale_price.toString(),
+      is_free: course.is_free,
       intro_url: course.intro_url,
       desc: course.desc,
       image: course.image,
@@ -99,15 +124,25 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log('onSubmit: Bắt đầu xử lý, giá trị form:', values);
     setIsSubmitting(true);
-    const priceValue = Number(values.price?.replace(/,/g, ''));
-    const salePriceValue = Number(values.sale_price?.replace(/,/g, ''));
+    console.log('onSubmit: isSubmitting được đặt thành true');
+
+    let priceValue = 0;
+    let salePriceValue = 0;
+
+    if (!values.is_free) {
+      priceValue = Number(values.price?.replace(/,/g, '') || 0);
+      salePriceValue = Number(values.sale_price?.replace(/,/g, '') || 0);
+    }
+
     try {
       const response = await updateCourse({
         slug: course.slug,
         updateData: {
           title: values.title,
           slug: values.slug,
+          is_free: Boolean(values.is_free),
           price: priceValue,
           sale_price: salePriceValue,
           intro_url: values.intro_url,
@@ -122,23 +157,44 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
           level: values.level,
           image: values.image,
         },
+        path: `/manage/course/update?slug=${values.slug || course.slug}`,
       });
+      console.log('onSubmit: Kết quả từ updateCourse:', response);
 
-      if (values.slug !== course.slug) {
-        router.replace(`/manage/course/update?slug=${values.slug}`);
-      }
       if (response?.success) {
-        toast.success(response.message);
-        router.push('/manage/course');
+        toast.success(response.message || 'Cập nhật khóa học thành công');
+        console.log(
+          'onSubmit: Cập nhật thành công, chuyển hướng về /manage/course',
+        );
+        if (values.slug && values.slug !== course.slug) {
+          router.push(`/manage/course/update?slug=${values.slug}`);
+        } else {
+          router.push('/manage/course');
+        }
+      } else {
+        toast.error(response?.error || 'Cập nhật khóa học không thành công.');
+        console.error(
+          'onSubmit: Cập nhật thất bại hoặc response không có success:true',
+          response?.error,
+        );
       }
     } catch (error) {
-      console.log(error);
+      console.error('onSubmit: Lỗi trong khối try-catch:', error);
+      toast.error('Đã có lỗi xảy ra trong quá trình cập nhật.');
     } finally {
+      console.log('onSubmit: Khối finally, đặt isSubmitting thành false');
       setIsSubmitting(false);
     }
   }
-  const imageWatch = form.watch('image');
 
+  const imageWatch = form.watch('image');
+  const isFreeChecked = form.watch('is_free');
+  useEffect(() => {
+    if (isFreeChecked) {
+      form.setValue('price', '0');
+      form.setValue('sale_price', '0');
+    }
+  }, [isFreeChecked, form]);
   return (
     <Form {...form}>
       <form
@@ -180,6 +236,24 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
           />
           <FormField
             control={form.control}
+            name="is_free"
+            render={({ field }) => (
+              <FormItem className="col-start-1 col-end-3">
+                <FormLabel>Khóa học Free</FormLabel>
+                <FormControl className="h-12">
+                  <div className="flex flex-col justify-center">
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="price"
             render={({ field }) => (
               <FormItem>
@@ -189,6 +263,7 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
                     placeholder="599.000"
                     {...field}
                     onChange={(event) => field.onChange(event.target.value)}
+                    disabled={isFreeChecked}
                   />
                 </FormControl>
                 <FormMessage />
@@ -206,6 +281,7 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
                     placeholder="999.000"
                     {...field}
                     onChange={(event) => field.onChange(event.target.value)}
+                    disabled={isFreeChecked}
                   />
                 </FormControl>
                 <FormMessage />

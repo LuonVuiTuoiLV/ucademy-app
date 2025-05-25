@@ -372,10 +372,10 @@ const UpdateUserDetailContainer = ({
       </div>
 
       <div className="mt-6">
-        <Label>Trạng thái trên Clerk</Label>
+        <Label>Trạng thái trên</Label>
         <div className="mt-1 flex items-center gap-3">
           <BadgeStatus
-            title={isClerkBanned ? 'Đã cấm (Clerk)' : 'Không cấm (Clerk)'}
+            title={isClerkBanned ? 'Đã cấm' : 'Không cấm'}
             variant={isClerkBanned ? 'red' : 'green'}
           />
           <Button

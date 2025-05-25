@@ -18,12 +18,6 @@ export interface CourseLessonPageRootProps {
     sort: QuerySortFilter;
   };
 }
-export type GetAllCourseParams = {
-  page?: number;
-  limit?: number;
-  search?: string;
-  status?: string;
-};
 export type CreateCourseParams = {
   title: string;
   slug: string;

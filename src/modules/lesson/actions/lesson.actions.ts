@@ -64,8 +64,7 @@ export async function getLessonBySlug({
       slug,
       course,
     }).select('title video_url content');
-
-    return findLesson;
+    return JSON.parse(JSON.stringify(findLesson));
   } catch (error) {
     console.log(error);
   }
@@ -81,7 +80,7 @@ export async function findAllLessons({
       course,
     }).select('title video_url content slug');
 
-    return lessons;
+    return JSON.parse(JSON.stringify(lessons));
   } catch (error) {
     console.log(error);
   }

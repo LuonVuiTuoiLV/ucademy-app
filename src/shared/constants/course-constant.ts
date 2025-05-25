@@ -20,6 +20,12 @@ export const courseStatus: {
     variant: 'warning',
   },
   {
+    title: 'Sắp ra mắt',
+    value: CourseStatus.COMING_SOON,
+    className: 'text-blue-500 bg-blue-500',
+    variant: 'warning',
+  },
+  {
     title: 'Từ chối',
     value: CourseStatus.REJECTED,
     className: 'text-red-500 bg-red-500',

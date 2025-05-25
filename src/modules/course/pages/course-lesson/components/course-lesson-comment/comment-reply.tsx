@@ -23,12 +23,12 @@ const CommentReply = ({ comment, lessonId }: CommentReplyProps) => {
           <>
             <button
               type="button"
-              className={cn('font-bold uppercase text-gray-400', {
+              className={cn('text-xs font-medium uppercase text-gray-400', {
                 underline: isShowReply,
               })}
               onClick={() => setIsShowReply(!isShowReply)}
             >
-              Reply
+              Trả lời
             </button>
           </>
         )}

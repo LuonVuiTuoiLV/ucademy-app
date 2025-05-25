@@ -31,7 +31,7 @@ export const menuItems: MenuField[] = [
     isNew: true,
   },
   {
-    url: '/user',
+    url: '/coming-soon',
     title: 'Sắp ra mắt',
     icon: <IconBlink className="size-5" />,
     isHot: true,

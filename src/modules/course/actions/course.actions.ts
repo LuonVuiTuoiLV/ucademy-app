@@ -3,7 +3,11 @@
 import { FilterQuery } from 'mongoose';
 import { revalidatePath } from 'next/cache';
 
-import { CourseStatus, RatingStatus } from '@/shared/constants';
+import {
+  CourseStatus,
+  ITEMS_PER_PAGES_ROOT,
+  RatingStatus,
+} from '@/shared/constants';
 import { connectToDatabase } from '@/shared/lib/mongoose';
 import {
   CourseModel,
@@ -16,7 +20,6 @@ import {
   CourseItemData,
   CourseLessonData,
   CreateCourseParams,
-  GetAllCourseParams,
   QueryFilter,
   UpdateCourseParams,
 } from '@/shared/types';
@@ -30,21 +33,34 @@ export async function fetchCourses(params: QueryFilter): Promise<
 > {
   try {
     connectToDatabase();
-    const { limit = 10, page = 1, search, status } = params;
+    const {
+      limit = ITEMS_PER_PAGES_ROOT,
+      page = 1,
+      search,
+      status: statusParam,
+      isFree,
+    } = params;
     const skip = (page - 1) * limit;
     const query: FilterQuery<typeof CourseModel> = {};
-
+    if (statusParam) {
+      query.status = statusParam;
+    } else {
+      query.status = CourseStatus.APPROVED;
+    }
     if (search) {
       query.$or = [{ title: { $regex: search, $options: 'i' } }];
     }
-    query.status = CourseStatus.APPROVED;
-    if (status) {
-      query.status = status;
+    if (isFree === true) {
+      query.is_free = true;
+    } else if (isFree === false) {
+      query.$or = [{ is_free: false }, { is_free: { $exists: false } }];
     }
     const courseList = await CourseModel.find(query)
       .skip(skip)
       .limit(limit)
-      .sort({ created_at: -1 });
+      .sort({ created_at: -1 })
+      .lean();
+
     const total = await CourseModel.countDocuments(query);
 
     return {
@@ -122,15 +138,16 @@ export async function fetchCourseBySlug({
         match: {
           status: RatingStatus.ACTIVE,
         },
-      });
+      })
+      .lean();
 
-    return JSON.parse(JSON.stringify(findCourse)) as CourseItemData;
+    return JSON.parse(JSON.stringify(findCourse));
   } catch (error) {
     console.log(error);
   }
 }
 export async function getAllCoursesPublic(
-  params: GetAllCourseParams,
+  params: QueryFilter,
 ): Promise<CourseItemData[] | undefined> {
   try {
     connectToDatabase();
@@ -141,7 +158,7 @@ export async function getAllCoursesPublic(
     if (search) {
       query.$or = [{ title: { $regex: search, $options: 'i' } }];
     }
-    query.status = CourseStatus.APPROVED;
+    query.status = CourseStatus.COMING_SOON;
     const courses = await CourseModel.find(query)
       .skip(skip)
       .limit(limit)
@@ -173,27 +190,46 @@ export async function createCourse(params: CreateCourseParams) {
     console.log(error);
   }
 }
-export async function updateCourse(params: UpdateCourseParams) {
+export async function updateCourse(params: UpdateCourseParams): Promise<{
+  success: boolean;
+  message?: string;
+  data?: any; // Kiểu dữ liệu của updatedCourse
+  error?: string;
+}> {
   try {
-    connectToDatabase();
+    connectToDatabase(); // Đảm bảo hàm này await nếu nó là async
     const findCourse = await CourseModel.findOne({ slug: params.slug });
 
-    if (!findCourse) return;
-    await CourseModel.findOneAndUpdate(
-      { slug: params.slug },
-      params.updateData,
-      {
-        new: true,
-      },
-    );
-    revalidatePath(params.path || '/');
+    if (!findCourse) {
+      return { success: false, error: 'Khóa học không tồn tại.', data: null };
+    }
 
+    const updatedCourse = await CourseModel.findOneAndUpdate(
+      { slug: params.slug },
+      { $set: params.updateData },
+      { new: true },
+    );
+
+    if (!updatedCourse) {
+      return {
+        success: false,
+        error: 'Cập nhật khóa học thất bại.',
+        data: null,
+      };
+    }
+
+    revalidatePath(params.path || '/');
     return {
       success: true,
       message: 'Cập nhật khóa học thành công!',
+      data: JSON.parse(JSON.stringify(updatedCourse)),
     };
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message || 'Lỗi server khi cập nhật khóa học.',
+      data: null,
+    };
   }
 }
 export async function updateCourseView({ slug }: { slug: string }) {

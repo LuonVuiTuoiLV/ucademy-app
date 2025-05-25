@@ -11,7 +11,7 @@ function UpdateCouponPageRoot({ searchParams }: UpdateCouponPageRootProps) {
   return (
     <>
       <Heading>Cập Nhật Mã Giảm Giá</Heading>
-      <UpdateCouponPage code={searchParams.code} />;
+      <UpdateCouponPage code={searchParams.code} />
     </>
   );
 }

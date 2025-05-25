@@ -16,7 +16,7 @@ const buttonVariants = cva(
           'bg-red-500 text-slate-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-slate-50 dark:hover:bg-red-900/90',
         outline: 'borderDarkMode bgDarkMode border',
         secondary:
-          'bg-slate-100 text-slate-900 hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80',
+          'whitespace-nowrap ring-offset-white transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 py-2 h-12 rounded-lg px-5 flex items-center justify-center bg-gradient-to-r from-[#cbabff] to-[#ff979a] text-white font-bold shadow-[0_0_1px_3px_rgb(203,_171,_255,0.2)] text-base w-full',
         ghost:
           'hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50',
         link: 'text-slate-900 underline-offset-4 hover:underline dark:text-slate-50',
@@ -31,7 +31,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: 'default',
+      variant: 'outline',
       size: 'default',
     },
   },

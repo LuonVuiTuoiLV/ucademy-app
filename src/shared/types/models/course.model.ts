@@ -13,6 +13,7 @@ export interface CourseModelProps extends Document {
   slug: string;
   status: CourseStatus;
   level: CourseLevel;
+  is_free: boolean;
   views: number;
   rating: Schema.Types.ObjectId[];
   info: {

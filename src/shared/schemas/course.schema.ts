@@ -28,6 +28,10 @@ const courseSchema = new Schema<CourseModelProps>({
     type: Number,
     default: 0,
   },
+  is_free: {
+    type: Boolean,
+    default: false,
+  },
   sale_price: {
     type: Number,
     default: 0,

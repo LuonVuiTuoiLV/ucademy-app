@@ -18,6 +18,7 @@ export interface CreateOrderParams {
   amount?: number;
   discount?: number;
   coupon?: string;
+  status?: string;
 }
 export interface UpdateOrderParams {
   orderId: string;

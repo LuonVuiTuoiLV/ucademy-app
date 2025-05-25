@@ -68,9 +68,15 @@ const RatingButton = ({ courseId }: RatingButtonProps) => {
 
   return (
     <Dialog>
-      <DialogTrigger className="flex h-12 items-center gap-3 rounded-lg bg-primary px-5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">
-        <IconStar />
-        <span>Đánh giá khóa học</span>
+      <DialogTrigger className="ml-auto block w-fit rounded-full text-sm">
+        <div className="button-gradient group rounded-full">
+          <div className="button-inside rounded-full">
+            <div className="button-main bgDarkMode flex items-center gap-2 rounded-full px-3 text-sm text-grayDarkest group-hover:text-opacity-70 dark:text-white">
+              <IconStar className="size-4 fill-[#ff979a] group-hover:animate-spin" />
+              Đánh giá khóa học
+            </div>
+          </div>
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

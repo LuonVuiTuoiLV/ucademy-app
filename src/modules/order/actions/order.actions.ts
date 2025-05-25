@@ -77,12 +77,22 @@ export async function createOrder(params: CreateOrderParams) {
         $inc: { used: 1 },
       });
     }
+    if (newOrder.status === OrderStatus.COMPLETED) {
+      const userId = newOrder.user;
+      const courseId = newOrder.course;
 
+      const updateUserResult = await UserModel.findByIdAndUpdate(
+        userId,
+        { $addToSet: { courses: courseId } },
+        { new: true },
+      );
+    }
     return JSON.parse(JSON.stringify(newOrder));
   } catch (error) {
     console.log(error);
   }
 }
+
 export async function updateOrder({ orderId, status }: UpdateOrderParams) {
   try {
     connectToDatabase();
@@ -113,7 +123,6 @@ export async function updateOrder({ orderId, status }: UpdateOrderParams) {
       status === OrderStatus.COMPLETED &&
       findOrder.status === OrderStatus.PENDING
     ) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       findUser.courses.push(findOrder.course._id as any);
       await findUser.save();
     }

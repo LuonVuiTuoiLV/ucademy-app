@@ -25,7 +25,9 @@ async function CourseDetailsContainer({
   courseDetails,
 }: CourseDetailsContainerProps) {
   const isEmptyData =
-    !courseDetails || courseDetails.status !== CourseStatus.APPROVED;
+    !courseDetails ||
+    (courseDetails.status !== CourseStatus.COMING_SOON &&
+      courseDetails.status !== CourseStatus.APPROVED);
 
   if (isEmptyData) return <PageNotFound />;
   const videoId = courseDetails.intro_url?.split('v=')[1];
