@@ -1,18 +1,12 @@
 import { fetchCourses } from '@/modules/course/actions'; // Đảm bảo đường dẫn đúng
 import { ITEMS_PER_PAGES_ROOT } from '@/shared/constants';
 
+import { QuerySearchParams } from '@/shared/types';
 import CourseDashboardContainer from './components';
-interface CourseSearchParams {
-  searchParams?: {
-    page?: string;
-    search?: string;
-    isFree?: string;
-    status?: string;
-  };
-}
+
 export default async function CourseDashboardPage({
   searchParams,
-}: CourseSearchParams) {
+}: QuerySearchParams) {
   const currentPage = Number(searchParams?.page);
   const searchTerm = searchParams?.search || '';
   const isFreeFilter = searchParams?.isFree === 'true';
@@ -24,7 +18,6 @@ export default async function CourseDashboardPage({
   });
 
   const courseList = data?.courseList || [];
-  console.log(' courseList:', courseList);
   const totalCourses = data?.total || 0;
   const totalPages = Math.ceil(totalCourses / ITEMS_PER_PAGES_ROOT);
 

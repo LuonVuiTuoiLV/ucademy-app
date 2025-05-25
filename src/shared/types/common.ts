@@ -4,7 +4,7 @@ export interface QueryFilter {
   search?: string;
   status?: string;
   active?: boolean;
-  isFree?: boolean;
+  isFree?: boolean | string;
 }
 export interface QuerySearchParams {
   searchParams: QueryFilter;
