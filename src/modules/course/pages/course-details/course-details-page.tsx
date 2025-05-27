@@ -1,5 +1,3 @@
-import { auth } from '@clerk/nextjs/server';
-
 import { fetchCourseBySlug } from '../../actions';
 import CourseDetailsContainer from './components';
 
@@ -11,14 +9,8 @@ async function CourseDetailsPage({ slug }: CourseDetailsPageProps) {
   const courseDetails = await fetchCourseBySlug({
     slug,
   });
-  const { userId } = auth();
 
-  return (
-    <CourseDetailsContainer
-      courseDetails={courseDetails}
-      userId={userId}
-    />
-  );
+  return <CourseDetailsContainer courseDetails={courseDetails} />;
 }
 
 export default CourseDetailsPage;

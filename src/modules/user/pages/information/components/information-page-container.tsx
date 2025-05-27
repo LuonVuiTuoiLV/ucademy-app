@@ -75,8 +75,6 @@ const InfoPageContainer = () => {
     }
     setIsSubmitting(true);
     try {
-      // Dữ liệu avatar sẽ là giá trị hiện tại trong form (imageWatch),
-      // có thể là URL Clerk cũ, URL UploadThing mới, hoặc URL người dùng tự nhập.
       const avatarToUpdate = data.avatar || null; // Gửi null nếu avatar rỗng
 
       const result = await updateUserProfile({
@@ -150,18 +148,16 @@ const InfoPageContainer = () => {
         >
           Ảnh đại diện
         </Label>
-        <div className="relative">
-          <Image
-            alt="Ảnh đại diện"
-            className="size-32 rounded-full border-2 border-gray-300 object-cover dark:border-gray-600"
-            height={128}
-            src={imageWatch || userInfo?.avatar || '/placeholder-avatar.png'}
-            width={128}
-            onError={(e) => {
-              e.currentTarget.src = '/placeholder-avatar.png';
-            }}
-          />
-        </div>
+        <Image
+          alt="Ảnh đại diện"
+          className="size-32 rounded-full border-2 border-gray-300 object-cover dark:border-gray-600"
+          height={128}
+          src={imageWatch || userInfo?.avatar || '/placeholder-avatar.png'}
+          width={128}
+          onError={(e) => {
+            e.currentTarget.src = '/placeholder-avatar.png';
+          }}
+        />
         <UploadButton
           endpoint="imageUploader" // Endpoint của UploadThing
           appearance={{

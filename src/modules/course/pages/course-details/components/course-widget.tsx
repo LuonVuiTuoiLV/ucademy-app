@@ -1,11 +1,20 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { IconPlay, IconStudy, IconUsers } from '@/shared/components/icons';
+import {
+  IconPlay,
+  IconStar,
+  IconStudy,
+  IconUsers,
+} from '@/shared/components/icons';
 import { useUserContext } from '@/shared/contexts';
 import { CourseItemData } from '@/shared/types';
 
+import { LassLessonData } from '@/modules/course/types';
+import ShiningButton from '@/shared/components/ui/shinning';
+import { lastLessonKey } from '@/shared/constants';
+import Image from 'next/image';
 import ButtonEnroll from './button-enroll';
 import CouponForm from './coupon-form';
 
@@ -14,7 +23,6 @@ interface CourseWidgetProps {
   duration: string;
 }
 const CourseWidget = ({ data, duration }: CourseWidgetProps) => {
-  console.log(' data:', data);
   const [price, setPrice] = useState<number>(data.price);
   const [coupon, setCoupon] = useState('');
   const { userInfo } = useUserContext();
@@ -22,16 +30,59 @@ const CourseWidget = ({ data, duration }: CourseWidgetProps) => {
   const isAlreadyEnrolled = userInfo?.courses
     ? JSON.parse(JSON.stringify(userInfo?.courses)).includes(data._id)
     : false;
+  const [lastLesson, setLastLesson] = useState<LassLessonData[]>([]);
+
+  useEffect(() => {
+    if (typeof localStorage === 'undefined') return;
+    const lesson = localStorage
+      ? JSON.parse(localStorage?.getItem(lastLessonKey) || '[]') || []
+      : [];
+
+    setLastLesson(lesson);
+  }, []);
+
+  const firstLessonUrl = data.lectures[0].lessons[0].slug;
+  const lastURL =
+    lastLesson.find((element) => element.course === data.slug)?.lesson ||
+    `/${data.slug}/lesson?slug=${firstLessonUrl}`;
 
   if (isAlreadyEnrolled)
     return (
-      <div className="bgDarkMode borderDarkMode rounded-lg border p-5">
-        <Link
-          className="flex h-12 w-full items-center justify-center rounded-lg bg-primary font-bold text-white"
-          href="/study"
-        >
-          Khu vực học tập
-        </Link>
+      <div className="sticky right-0 top-5 flex flex-col gap-5">
+        <div className="relative flex flex-col rounded-lg border border-white bg-white/30 p-3 backdrop-blur-xl transition-all dark:border-white/10 dark:bg-grayDarkest">
+          <div className="rounded-lg bg-white p-3 dark:bg-grayDarker">
+            <div className="borderDarkMode relative mx-auto mb-5 size-24 rounded-full border">
+              <Image
+                alt="Ảnh đại diện"
+                className="h-full w-full rounded-full object-cover"
+                height={96}
+                width={96}
+                src={userInfo?.avatar || ''}
+              />
+              <IconStar className="absolute bottom-0 right-0 size-5 fill-[#ff979a]" />
+            </div>
+            <div className="text-center">
+              Xin chào{' '}
+              <strong className="text-base italic">{userInfo?.username}</strong>{' '}
+            </div>
+            <div className="text-center">
+              Bạn đã sở hữu khóa học này rồi. Vui lòng vào{' '}
+              <Link
+                className="font-bold text-primary"
+                href="/study"
+              >
+                Khu vực học tập
+              </Link>{' '}
+              để học hoặc
+            </div>
+            <Link
+              className="mt-5 flex h-12 w-full items-center justify-center rounded-lg"
+              href={lastURL}
+            >
+              <ShiningButton>Nhấn vào đây</ShiningButton>
+            </Link>
+          </div>
+        </div>
       </div>
     );
 

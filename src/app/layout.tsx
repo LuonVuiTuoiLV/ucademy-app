@@ -1,16 +1,17 @@
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.scss';
 
+import { ThemeProvider } from '@/shared/components/common';
+import { ConditionalChatLayout } from '@/shared/components/layout';
+import { COLOR } from '@/shared/constants/colors';
+import { UserProvider } from '@/shared/contexts';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Manrope } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 import { ToastContainer } from 'react-toastify';
-
-import { ThemeProvider } from '@/shared/components/common';
-import { ConditionalChatLayout } from '@/shared/components/layout';
-import { UserProvider } from '@/shared/contexts';
 
 export const metadata: Metadata = {
   title: 'Ucademy',
@@ -38,6 +39,17 @@ export default function RootLayout({
         lang="vi"
       >
         <body className={`${manrope.variable} `}>
+          <NextTopLoader
+            color={COLOR.gradient} // ✅ Thay bằng màu chính của bạn, ví dụ: COLOR.primary
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={3}
+            crawl={true}
+            showSpinner={false}
+            easing="ease"
+            speed={200}
+            // zIndex={1600} // (Tùy chọn) Tăng z-index nếu bị các phần tử khác che mất
+          />
           <ThemeProvider
             disableTransitionOnChange
             enableSystem

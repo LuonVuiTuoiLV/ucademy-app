@@ -37,6 +37,10 @@ const config: Config = {
       brightness: {
         150: '1.5',
       },
+      backgroundImage: {
+        striped:
+          'repeating-linear-gradient(45deg, #3B3A3D, #3B3A3D 5px, transparent 5px, transparent 20px)',
+      },
       keyframes: {
         'accordion-down': {
           from: { height: '0' },
@@ -88,6 +92,16 @@ const config: Config = {
             'background-position': 'var(--bg-size, 300%) 0',
           },
         },
+        'blink-red': {
+          '0%, 100%': {
+            backgroundColor: 'rgba(239, 68, 68, 0.7)',
+            boxShadow: '0 0 30px 10px rgba(239, 68, 68, 0.5)',
+          },
+          '50%': {
+            backgroundColor: 'rgba(239, 68, 68, 0.5)',
+            boxShadow: '0 0 30px 10px rgba(239, 68, 68, 1)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -96,6 +110,7 @@ const config: Config = {
         aurora: 'aurora 8s ease-in-out infinite alternate',
         rainbow: 'rainbow var(--speed, 2s) infinite linear;',
         gradient: 'gradient 8s linear infinite',
+        'blink-red': 'blink-red 2s infinite linear',
       },
     },
   },

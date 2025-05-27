@@ -4,6 +4,7 @@ export * from './calendar';
 export * from './checkbox';
 export * from './dialog';
 export * from './dropdown-menu';
+export * from './firework';
 export * from './form';
 export * from './gradient-text';
 export * from './input';

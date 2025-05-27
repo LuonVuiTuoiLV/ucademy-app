@@ -17,7 +17,6 @@ import SectionInfoItem from './section-info-item';
 import SectionItem from './section-item';
 
 export interface CourseDetailsContainerProps {
-  userId?: string | null;
   courseDetails: CourseItemData | undefined;
 }
 
