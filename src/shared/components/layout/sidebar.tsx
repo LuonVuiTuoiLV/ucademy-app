@@ -11,6 +11,7 @@ import { ChevronRight } from 'lucide-react';
 import { MenuItem, ModeToggle } from '../common';
 import { AnimatedGradientText } from '../ui';
 import { SparklesText } from '../ui/sparkles-text';
+import NotificationBell from './notification-bell';
 
 function Sidebar() {
   const { userId } = useAuth();
@@ -83,6 +84,7 @@ function Sidebar() {
             <ChevronRight className="ml-1 size-4 stroke-neutral-500 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
           </Link>
         )}
+        <NotificationBell />
       </div>
     </div>
   );

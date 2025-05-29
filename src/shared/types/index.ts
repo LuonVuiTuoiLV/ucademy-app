@@ -7,3 +7,4 @@ export * from './history.type';
 export * from './lecture.type';
 export * from './lesson.type';
 export * from './models';
+export * from './notification.type';

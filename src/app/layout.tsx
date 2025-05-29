@@ -26,7 +26,6 @@ export const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope',
 });
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,7 +39,7 @@ export default function RootLayout({
       >
         <body className={`${manrope.variable} `}>
           <NextTopLoader
-            color={COLOR.gradient} // ✅ Thay bằng màu chính của bạn, ví dụ: COLOR.primary
+            color={COLOR.gradient}
             initialPosition={0.08}
             crawlSpeed={200}
             height={3}
@@ -48,7 +47,6 @@ export default function RootLayout({
             showSpinner={false}
             easing="ease"
             speed={200}
-            // zIndex={1600} // (Tùy chọn) Tăng z-index nếu bị các phần tử khác che mất
           />
           <ThemeProvider
             disableTransitionOnChange

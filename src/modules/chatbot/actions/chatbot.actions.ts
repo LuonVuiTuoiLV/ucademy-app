@@ -157,7 +157,7 @@ async function fetchDataFromDatabase(
           mongoQuery.title = { $regex: new RegExp(entities.keyword, 'i') };
         if (entities.level) mongoQuery.level = entities.level.toLowerCase();
         data = await CourseModel.find(mongoQuery)
-          .sort({ views: -1, createdAt: -1 })
+          .sort({ views: -1, created_at: -1 })
           .limit(entities.limit || 3)
           .select('title slug level price') // Lấy ít trường hơn cho danh sách
           .lean();

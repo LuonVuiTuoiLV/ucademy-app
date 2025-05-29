@@ -24,7 +24,6 @@ const VideoPlayer = ({
   prevLesson,
   videoUrl,
 }: VideoPlayerProps) => {
-  console.log(' video_url:', videoUrl);
   const duration = 5000;
   const [isEndedVideo, setIsEndedVideo] = useState(false);
   const { setShouldExpandedPlayer, shouldExpandedPlayer } = useGlobalStore();

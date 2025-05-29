@@ -1,8 +1,9 @@
 'use server';
 
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 import { revalidatePath } from 'next/cache';
 
+import { createNotification } from '@/modules/notification/actions';
 import {
   CourseStatus,
   ITEMS_PER_PAGES_ROOT,
@@ -19,7 +20,9 @@ import {
 import {
   CourseItemData,
   CourseLessonData,
+  CourseModelProps,
   CreateCourseParams,
+  NotificationType,
   QueryFilter,
   UpdateCourseParams,
 } from '@/shared/types';
@@ -190,6 +193,42 @@ export async function createCourse(params: CreateCourseParams) {
     console.log(error);
   }
 }
+async function notifyAllUsersAboutPublishedCourse(course: CourseModelProps) {
+  try {
+    const users = (await UserModel.find({}).select('_id').lean()) as Array<{
+      _id: Types.ObjectId;
+    }>;
+
+    for (const user of users) {
+      if (user && user._id) {
+        let message = '';
+        let link = `/`;
+
+        if (course.status === CourseStatus.APPROVED) {
+          message = `🚀 Khóa học mới "${course.title}" đã chính thức ra mắt! Khám phá ngay!`;
+        } else if (course.status === CourseStatus.COMING_SOON) {
+          message = `🔔 Khóa học "${course.title}" sắp ra mắt! Đừng bỏ lỡ!`;
+          link = `/coming-soon`; // Hoặc link phù hợp
+        }
+
+        if (message) {
+          await createNotification({
+            recipientId: user._id.toString(),
+            type: NotificationType.SYSTEM_ANNOUNCEMENT,
+            message,
+            link,
+            senderId: 'SYSTEM',
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.error(
+      `Lỗi khi gửi thông báo hàng loạt cho khóa học "${course.title}":`,
+      error,
+    );
+  }
+}
 export async function updateCourse(params: UpdateCourseParams): Promise<{
   success: boolean;
   message?: string;
@@ -218,6 +257,21 @@ export async function updateCourse(params: UpdateCourseParams): Promise<{
       };
     }
 
+    // --- Logic gửi thông báo ---
+    const newStatus = updatedCourse.status;
+    const oldStatus = findCourse.status;
+
+    const shouldSendNotification =
+      (newStatus === CourseStatus.APPROVED &&
+        oldStatus !== CourseStatus.APPROVED) ||
+      (newStatus === CourseStatus.COMING_SOON &&
+        oldStatus !== CourseStatus.COMING_SOON);
+
+    if (shouldSendNotification) {
+      notifyAllUsersAboutPublishedCourse(updatedCourse).catch((err) => {
+        console.error('Lỗi nền khi gửi thông báo về khóa học:', err);
+      });
+    }
     revalidatePath(params.path || '/');
     return {
       success: true,

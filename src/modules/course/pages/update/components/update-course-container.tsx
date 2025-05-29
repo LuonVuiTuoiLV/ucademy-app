@@ -93,7 +93,6 @@ interface UpdateCourseContainerProps {
 }
 
 const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
-  console.log(' course:', course);
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [courseInfo, setCourseInfo] = useImmer({

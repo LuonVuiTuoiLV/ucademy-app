@@ -65,7 +65,6 @@ const ChatWidget = () => {
 
     try {
       const response = await askChatbot(currentUserQuery, historyForGemini);
-      // console.log("Chatbot Debug Info:", response.debugInfo);
 
       if (response.success && response.answer) {
         updateBotMessage(botMessageId, response.answer, false);

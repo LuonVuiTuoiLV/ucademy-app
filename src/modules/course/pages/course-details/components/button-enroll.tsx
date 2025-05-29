@@ -45,7 +45,7 @@ const ButtonEnroll = ({
           status: OrderStatus.COMPLETED,
         });
 
-        if (newOrder?.code) {
+        if (newOrder.data?.code) {
           toast.success(
             'Ghi danh khóa học miễn phí thành công! Bắt đầu học ngay.',
           );
@@ -74,8 +74,8 @@ const ButtonEnroll = ({
           coupon,
         });
 
-        if (newOrder?.code) {
-          router.push(`/order/${newOrder.code}`);
+        if (newOrder.data?.code) {
+          router.push(`/order/${newOrder.data.code}`);
         } else if (newOrder?.error) {
           toast.error(newOrder.error);
         } else {

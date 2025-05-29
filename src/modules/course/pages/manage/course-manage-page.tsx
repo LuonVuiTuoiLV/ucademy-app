@@ -16,7 +16,6 @@ async function CourseManagePage({ searchParams }: QuerySearchParams) {
   if (!data) return null;
   const { courseList, total } = data;
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
-  console.log(' courseList:', courseList);
   return (
     <CourseManageContainer
       courses={courseList}
