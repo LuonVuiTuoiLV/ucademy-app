@@ -7,7 +7,7 @@ import { courseLevelTitle, CourseStatus } from '@/shared/constants';
 import { CourseItemData } from '@/shared/types';
 import { CourseLessonData, CourseQAData } from '@/shared/types/course.type';
 
-import { useVideoDuration } from '@/shared/hooks/use-video-duration';
+import { formatVideoDuration } from '@/shared/helpers';
 import BenefitItem from './benefit-item';
 import CourseWidget from './course-widget';
 import QaItem from './qa-item';
@@ -37,7 +37,6 @@ async function CourseDetailsContainer({
   const requirements = courseDetails.info.requirements || [];
   const benefits = courseDetails.info.benefits || [];
   const questionAnswers = courseDetails.info.qa || [];
-  const { formatDuration } = useVideoDuration();
   const courseDetailsMeta: {
     title: string;
     content: React.ReactNode;
@@ -56,7 +55,7 @@ async function CourseDetailsContainer({
     },
     {
       title: 'Thời lượng',
-      content: formatDuration(lessonInfo.duration),
+      content: formatVideoDuration(lessonInfo.duration),
     },
   ];
 
@@ -182,7 +181,7 @@ async function CourseDetailsContainer({
       </div>
       <CourseWidget
         data={courseDetails}
-        duration={formatDuration(lessonInfo.duration)}
+        duration={formatVideoDuration(lessonInfo.duration)}
       />
     </div>
   );

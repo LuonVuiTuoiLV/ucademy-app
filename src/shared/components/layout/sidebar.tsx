@@ -41,7 +41,6 @@ function Sidebar() {
   if (isLoadingUser) {
     return (
       <div className="borderDarkMode bgDarkMode fixed inset-y-0 left-0 hidden w-[300px] animate-pulse flex-col border-r p-5 lg:flex">
-        {/* Skeleton UI */}
         <div className="mb-5 h-10 w-3/4 rounded bg-gray-200 dark:bg-gray-700"></div>
         <div className="flex flex-col gap-2">
           {[...Array(5)].map((_, i) => (
