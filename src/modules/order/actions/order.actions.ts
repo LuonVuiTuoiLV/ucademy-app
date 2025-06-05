@@ -2,6 +2,7 @@
 import { FilterQuery } from 'mongoose';
 import { revalidatePath } from 'next/cache';
 
+import { createNotification } from '@/modules/notification/actions';
 import { OrderStatus } from '@/shared/constants';
 import { connectToDatabase } from '@/shared/lib/mongoose';
 import {
@@ -10,7 +11,7 @@ import {
   OrderModel,
   UserModel,
 } from '@/shared/schemas';
-import { QueryFilter } from '@/shared/types';
+import { NotificationType, QueryFilter } from '@/shared/types';
 import {
   CreateOrderParams,
   OrderItemData,
@@ -69,8 +70,50 @@ export async function fetchOrders(
 export async function createOrder(params: CreateOrderParams) {
   try {
     connectToDatabase();
-    if (!params.coupon) delete params.coupon;
-    const newOrder = await OrderModel.create(params);
+
+    const { user: userId, course: courseId, status: requestedStatus } = params;
+
+    if (requestedStatus !== OrderStatus.COMPLETED) {
+      const existingOrder = (await OrderModel.findOne({
+        user: userId,
+        course: courseId,
+        status: { $ne: OrderStatus.CANCELED },
+      }).lean()) as { user?: string; status?: OrderStatus } | null;
+
+      if (existingOrder) {
+        let message = 'Bạn đã đặt mua khóa học này rồi.';
+        if (existingOrder.status === OrderStatus.PENDING) {
+          message =
+            'Đơn hàng cho khóa học này của bạn đang chờ xử lý. Vui lòng kiểm tra trong mục "Đơn hàng của tôi".';
+        } else if (existingOrder.status === OrderStatus.COMPLETED) {
+          message = 'Bạn đã sở hữu khóa học này. Hãy vào khu vực học tập!';
+        }
+        return {
+          success: false,
+          error: message,
+          message: message,
+        };
+      }
+    }
+
+    if (!params.coupon || params.coupon.trim() === '') {
+      delete params.coupon;
+    }
+
+    const orderDataToCreate = {
+      ...params,
+      status: requestedStatus || OrderStatus.PENDING,
+    };
+
+    const newOrderDoc = await OrderModel.create(orderDataToCreate);
+
+    if (!newOrderDoc) {
+      return {
+        success: false,
+        error: 'Không thể tạo đơn hàng. Vui lòng thử lại.',
+      };
+    }
+    const newOrder = JSON.parse(JSON.stringify(newOrderDoc));
 
     if (params.coupon) {
       await CouponModel.findByIdAndUpdate(params.coupon, {
@@ -78,16 +121,53 @@ export async function createOrder(params: CreateOrderParams) {
       });
     }
     if (newOrder.status === OrderStatus.COMPLETED) {
-      const userId = newOrder.user;
-      const courseId = newOrder.course;
+      // Logic ghi danh và gửi thông báo cho khóa học miễn phí (như đã có)
+      const userToUpdate = await UserModel.findById(userId);
+      const courseDetailsForNotif = (await CourseModel.findById(courseId)
+        .select('title slug')
+        .lean()) as { title?: string; slug?: string } | null;
 
-      const updateUserResult = await UserModel.findByIdAndUpdate(
-        userId,
-        { $addToSet: { courses: courseId } },
-        { new: true },
-      );
+      if (userToUpdate && courseDetailsForNotif) {
+        if (
+          !userToUpdate.courses
+            .map((c: { toString: () => any }) => c.toString())
+            .includes(courseId)
+        ) {
+          userToUpdate.courses.push(courseId as any);
+          await userToUpdate.save();
+          revalidatePath('/study');
+
+          if (courseDetailsForNotif.title && courseDetailsForNotif.slug) {
+            await createNotification({
+              recipientId: userId,
+              type: NotificationType.COURSE_ENROLLMENT_COMPLETED,
+              message: `Chúc mừng! Bạn đã ghi danh thành công khóa học "${courseDetailsForNotif.title}". Hãy bắt đầu học ngay!`,
+              link: `/study`,
+              senderId: 'SYSTEM',
+            });
+          }
+        }
+      }
+    } else if (newOrder.status === OrderStatus.PENDING) {
+      const courseDetailsForNotif = (await CourseModel.findById(courseId)
+        .select('title slug')
+        .lean()) as { title?: string; slug?: string } | null;
+      if (courseDetailsForNotif?.title) {
+        await createNotification({
+          recipientId: userId,
+          type: NotificationType.ORDER_PENDING, // Tạo một NotificationType mới
+          message: `Đơn hàng cho khóa học "${courseDetailsForNotif.title}" của bạn đã được tạo và đang chờ xác nhận. Mã đơn: ${newOrder.code}`,
+          link: `/order/${newOrder.code}`, // Link đến trang chi tiết đơn hàng của user
+          senderId: 'SYSTEM',
+        });
+      }
     }
-    return JSON.parse(JSON.stringify(newOrder));
+
+    return {
+      success: true,
+      data: newOrder,
+      message: 'Đặt hàng thành công! Đơn hàng của bạn đang chờ xử lý.',
+    };
   } catch (error) {
     console.log(error);
   }

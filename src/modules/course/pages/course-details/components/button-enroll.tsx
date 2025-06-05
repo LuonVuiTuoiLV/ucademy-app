@@ -6,6 +6,7 @@ import { createOrder } from '@/modules/order/actions/order.actions';
 import { Button } from '@/shared/components/ui';
 import { CourseStatus, OrderStatus } from '@/shared/constants';
 import { useUserContext } from '@/shared/contexts';
+import { useState } from 'react';
 
 interface ButtonEnrollProps {
   courseId: string;
@@ -24,7 +25,7 @@ const ButtonEnroll = ({
 }: ButtonEnrollProps) => {
   const { userInfo } = useUserContext();
   const router = useRouter();
-
+  const [isProcessing, setIsProcessing] = useState(false);
   const createOrderCode = () => `DH-${Date.now().toString().slice(-6)}`;
 
   const handleEnrollCourse = async () => {
@@ -33,7 +34,8 @@ const ButtonEnroll = ({
       router.push('/login');
       return;
     }
-
+    if (isProcessing) return;
+    setIsProcessing(true);
     if (isFree && status === CourseStatus.APPROVED) {
       try {
         const newOrder = await createOrder({
@@ -45,7 +47,7 @@ const ButtonEnroll = ({
           status: OrderStatus.COMPLETED,
         });
 
-        if (newOrder.data?.code) {
+        if (newOrder?.data.code) {
           toast.success(
             'Ghi danh khóa học miễn phí thành công! Bắt đầu học ngay.',
           );
@@ -61,6 +63,8 @@ const ButtonEnroll = ({
           error,
         );
         toast.error('Đã có lỗi xảy ra trong quá trình ghi danh.');
+      } finally {
+        setIsProcessing(false);
       }
     } else if (status !== CourseStatus.COMING_SOON) {
       try {
@@ -74,7 +78,7 @@ const ButtonEnroll = ({
           coupon,
         });
 
-        if (newOrder.data?.code) {
+        if (newOrder?.data.code) {
           router.push(`/order/${newOrder.data.code}`);
         } else if (newOrder?.error) {
           toast.error(newOrder.error);
@@ -84,7 +88,11 @@ const ButtonEnroll = ({
       } catch (error) {
         console.error('Lỗi khi tạo đơn hàng:', error);
         toast.error('Đã có lỗi xảy ra khi tạo đơn hàng.');
+      } finally {
+        setIsProcessing(false);
       }
+    } else {
+      setIsProcessing(false);
     }
   };
 
@@ -108,7 +116,8 @@ const ButtonEnroll = ({
       className="w-full"
       variant="secondary"
       onClick={handleEnrollCourse}
-      disabled={isDisabled}
+      disabled={isDisabled || isProcessing}
+      isLoading={isProcessing}
     >
       {buttonText}
     </Button>

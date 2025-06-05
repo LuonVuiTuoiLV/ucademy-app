@@ -1,5 +1,6 @@
 import {
   IconBlink,
+  IconBuilding,
   IconComment,
   IconCoupon,
   IconExplore,
@@ -15,7 +16,13 @@ import { MenuField } from '../types';
 
 export const menuItems: MenuField[] = [
   {
-    url: '/',
+    url: '/dashboard',
+    title: 'Dashboard',
+    icon: <IconBuilding className="size-5" />,
+    isManageItem: true,
+  },
+  {
+    url: '/explore',
     title: 'Khám phá',
     icon: <IconPlay className="size-5" />,
   },

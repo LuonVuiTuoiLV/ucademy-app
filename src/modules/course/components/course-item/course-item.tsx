@@ -48,27 +48,29 @@ const CourseItem = ({
       <div className="flex flex-1 flex-col pt-4">
         <h3 className="mb-3 text-lg font-bold">{data.title}</h3>
         <div className="mt-auto">
-          <div className="mb-5 flex items-center gap-3 text-xs text-gray-500 dark:text-grayDark">
-            {courseInfo.map((item) => (
-              <div
-                key={item.title}
-                className="flex items-center gap-2"
-              >
-                {item.icon}
-                <span>{item.title}</span>
-              </div>
-            ))}
-            <CourseItemDuration slug={data.slug} />
+          {cta !== 'Tiếp tục học'}
+          {
+            <div className="mb-5 flex items-center gap-3 text-xs text-gray-500 dark:text-grayDark">
+              {courseInfo.map((item) => (
+                <div
+                  key={item.title}
+                  className="flex items-center gap-2"
+                >
+                  {item.icon}
+                  <span>{item.title}</span>
+                </div>
+              ))}
+              <CourseItemDuration slug={data.slug} />
 
-            {data.is_free ? (
-              ''
-            ) : (
-              <span className="ml-auto text-base font-bold text-primary">
-                {data.price.toLocaleString()}đ
-              </span>
-            )}
-          </div>
-
+              {data.is_free ? (
+                ''
+              ) : (
+                <span className="ml-auto text-base font-bold text-primary">
+                  {data.price.toLocaleString()}đ
+                </span>
+              )}
+            </div>
+          }
           <Link
             className="button-primary mt-10 flex h-12 w-full items-center justify-center rounded-lg bg-primary font-bold text-white"
             href={courseUrl}

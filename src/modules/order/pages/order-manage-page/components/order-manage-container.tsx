@@ -8,8 +8,8 @@ import {
   EmptySpace,
   Heading,
   Pagination,
+  TableActionItem,
 } from '@/shared/components/common';
-import { IconCancel, IconCheck } from '@/shared/components/icons';
 import {
   Input,
   Select,
@@ -172,7 +172,7 @@ const OrderManagePage = ({ orders = [], total = 0 }: OrderManagePageProps) => {
                               })
                             }
                           >
-                            <IconCheck />
+                            <TableActionItem type="approve" />
                           </OrderAction>
                         )}
                         <OrderAction
@@ -183,7 +183,7 @@ const OrderManagePage = ({ orders = [], total = 0 }: OrderManagePageProps) => {
                             })
                           }
                         >
-                          <IconCancel />
+                          <TableActionItem type="cancel" />
                         </OrderAction>
                       </div>
                     )}

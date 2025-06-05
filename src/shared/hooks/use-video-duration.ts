@@ -1,5 +1,4 @@
-// hooks/useVideoDuration.ts
-
+'use client';
 import { useCallback, useState } from 'react';
 import { extractMuxId, extractYouTubeId, getYouTubeDuration } from '../utils';
 import { useMuxDuration } from './use-mux-duration';

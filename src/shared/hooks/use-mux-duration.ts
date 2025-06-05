@@ -65,6 +65,7 @@ export const useMuxDuration = () => {
       video.muted = true;
       video.playsInline = true;
       video.preload = 'metadata';
+      video.crossOrigin = 'anonymous'; // Add this for CORS
 
       let resolved = false;
 
@@ -106,12 +107,11 @@ export const useMuxDuration = () => {
         resolveOnce(null);
       }, 15000);
 
-      // Set source and load
+      // Set source and load - FIX: Remove the invalid https: prefix
       video.src = `https://stream.mux.com/${playbackId}.m3u8`;
-      //stream.mux.com/Yx7dKETC7Rd4xHf5r3uvYcZPPr02DUTt3wBriPwUbpyg.m3u8?min_resolution=1080p&redundant_streams=true
 
       // Add to DOM
-      https: document.body.appendChild(video);
+      document.body.appendChild(video);
 
       // Try to load
       try {

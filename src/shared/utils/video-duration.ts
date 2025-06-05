@@ -9,7 +9,7 @@ export const getVideoDuration = async (
       return await getYouTubeDuration(youtubeId);
     }
 
-    // Check if it's Mux URL
+    // Check if it's Mux URL or ID
     const muxId = extractMuxId(videoUrl);
     if (muxId) {
       return await getMuxDuration(muxId);
@@ -41,15 +41,25 @@ export const extractYouTubeId = (url: string): string | null => {
   return null;
 };
 
-// Extract Mux playback ID
+// Extract Mux playback ID - FIXED to handle direct IDs
 export const extractMuxId = (url: string): string | null => {
+  // Check for Mux player URL
   const muxUrlMatch = url.match(/player\.mux\.com\/([^\\/?#&]+)/);
-
   if (muxUrlMatch && muxUrlMatch[1]) {
     return muxUrlMatch[1];
-  } else if (!url.includes('/') && url.length > 20) {
-    // Heuristic: if it's not a typical URL and has a length common for IDs
-    return url;
+  }
+
+  // Check for Mux stream URL
+  const muxStreamMatch = url.match(/stream\.mux\.com\/([^\\/?#&.]+)/);
+  if (muxStreamMatch && muxStreamMatch[1]) {
+    return muxStreamMatch[1];
+  }
+
+  // Check if it's a direct Mux playback ID
+  // Mux playback IDs are typically long alphanumeric strings
+  const muxIdPattern = /^[a-zA-Z0-9]{20,}$/;
+  if (muxIdPattern.test(url.trim())) {
+    return url.trim();
   }
 
   return null;
@@ -108,7 +118,7 @@ export const getMuxDuration = async (
   playbackId: string,
 ): Promise<number | null> => {
   try {
-    // Method 1: Use Mux player to get duration
+    // Method 1: Use video element to get duration
     return await getMuxDurationFromPlayer(playbackId);
   } catch (error) {
     console.error('Error fetching Mux duration:', error);
@@ -123,7 +133,7 @@ export const getMuxDuration = async (
   }
 };
 
-// Method 1: Create invisible Mux player to get metadata
+// Method 1: Create invisible video element to get metadata
 export const getMuxDurationFromPlayer = (
   playbackId: string,
 ): Promise<number | null> => {
@@ -139,8 +149,12 @@ export const getMuxDurationFromPlayer = (
     video.style.display = 'none';
     video.style.position = 'absolute';
     video.style.top = '-9999px';
+    video.style.width = '1px';
+    video.style.height = '1px';
     video.muted = true;
     video.playsInline = true;
+    video.preload = 'metadata';
+    video.crossOrigin = 'anonymous';
 
     // Set Mux HLS source
     video.src = `https://stream.mux.com/${playbackId}.m3u8`;
@@ -161,26 +175,43 @@ export const getMuxDurationFromPlayer = (
       }
     };
 
-    video.addEventListener('loadedmetadata', () => {
-      if (video.duration && isFinite(video.duration)) {
-        resolveOnce(video.duration);
+    video.addEventListener('canplay', () => {
+      if (video.duration && isFinite(video.duration) && video.duration > 0) {
+        resolveOnce(Math.round(video.duration));
       } else {
-        resolveOnce(null);
+        setTimeout(() => {
+          if (
+            video.duration &&
+            isFinite(video.duration) &&
+            video.duration > 0
+          ) {
+            resolveOnce(Math.round(video.duration));
+          } else {
+            resolveOnce(null);
+          }
+        }, 100); // Trễ ngắn
       }
     });
 
-    video.addEventListener('error', () => {
+    video.addEventListener('error', (e) => {
+      console.warn('Mux video loading error:', e);
       resolveOnce(null);
     });
 
-    // Timeout after 10 seconds
-    setTimeout(() => {
+    // Timeout after 15 seconds
+    const timeoutId = setTimeout(() => {
       resolveOnce(null);
-    }, 10000);
+    }, 15000);
 
     // Add to DOM and load
     document.body.appendChild(video);
-    video.load();
+
+    try {
+      video.load();
+    } catch (loadError) {
+      clearTimeout(timeoutId);
+      resolveOnce(null);
+    }
   });
 };
 
@@ -191,9 +222,15 @@ export const getMuxDurationFromHLS = async (
   try {
     const manifestUrl = `https://stream.mux.com/${playbackId}.m3u8`;
 
-    const response = await fetch(manifestUrl);
+    const response = await fetch(manifestUrl, {
+      mode: 'cors',
+      headers: {
+        Accept: 'application/vnd.apple.mpegurl, application/x-mpegURL, */*',
+      },
+    });
+
     if (!response.ok) {
-      throw new Error('Failed to fetch HLS manifest');
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
     const manifest = await response.text();
@@ -201,9 +238,15 @@ export const getMuxDurationFromHLS = async (
     // Look for EXT-X-ENDLIST and calculate total duration
     const lines = manifest.split('\n');
     let totalDuration = 0;
+    let hasEndList = false;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
+
+      // Check if playlist has ended
+      if (line === '#EXT-X-ENDLIST') {
+        hasEndList = true;
+      }
 
       // Look for segment duration
       if (line.startsWith('#EXTINF:')) {
@@ -214,7 +257,7 @@ export const getMuxDurationFromHLS = async (
       }
     }
 
-    return totalDuration > 0 ? totalDuration : null;
+    return hasEndList && totalDuration > 0 ? Math.round(totalDuration) : null;
   } catch (error) {
     console.error('Error parsing HLS manifest:', error);
     return null;
@@ -227,6 +270,7 @@ export const getVideoDurationFromElement = (
 ): Promise<number | null> => {
   return new Promise((resolve) => {
     const video = document.createElement('video');
+    video.crossOrigin = 'anonymous';
 
     video.addEventListener('loadedmetadata', () => {
       resolve(video.duration);

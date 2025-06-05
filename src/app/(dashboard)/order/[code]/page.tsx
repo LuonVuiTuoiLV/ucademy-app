@@ -44,7 +44,9 @@ const OrderDetailsPageRoot = async ({ params }: OrderDetailsPageRootProps) => {
           Cám ơn bạn đã mua khóa học{' '}
           <strong className="text-primary">{orderDetails.course.title}</strong>{' '}
           với số tiền là{' '}
-          <strong className="text-primary">{orderDetails.total}</strong>
+          <strong className="text-primary">
+            ${orderDetails.total.toLocaleString('vi-VN')} VND
+          </strong>
         </p>
         <p>
           Bạn vui lòng thanh toán vào thông tin tài khoản dưới đây với nội dung

@@ -4,10 +4,10 @@ import PageNotFound from '@/app/not-found';
 import { getCourseLessonsInfo } from '@/modules/course/actions';
 import { CourseOutline } from '@/shared/components/course';
 import { courseLevelTitle, CourseStatus } from '@/shared/constants';
-import { formatMinutesToHour } from '@/shared/helpers';
 import { CourseItemData } from '@/shared/types';
 import { CourseLessonData, CourseQAData } from '@/shared/types/course.type';
 
+import { useVideoDuration } from '@/shared/hooks/use-video-duration';
 import BenefitItem from './benefit-item';
 import CourseWidget from './course-widget';
 import QaItem from './qa-item';
@@ -37,7 +37,7 @@ async function CourseDetailsContainer({
   const requirements = courseDetails.info.requirements || [];
   const benefits = courseDetails.info.benefits || [];
   const questionAnswers = courseDetails.info.qa || [];
-
+  const { formatDuration } = useVideoDuration();
   const courseDetailsMeta: {
     title: string;
     content: React.ReactNode;
@@ -56,7 +56,7 @@ async function CourseDetailsContainer({
     },
     {
       title: 'Thời lượng',
-      content: formatMinutesToHour(lessonInfo.duration),
+      content: formatDuration(lessonInfo.duration),
     },
   ];
 
@@ -182,7 +182,7 @@ async function CourseDetailsContainer({
       </div>
       <CourseWidget
         data={courseDetails}
-        duration={formatMinutesToHour(lessonInfo.duration)}
+        duration={formatDuration(lessonInfo.duration)}
       />
     </div>
   );

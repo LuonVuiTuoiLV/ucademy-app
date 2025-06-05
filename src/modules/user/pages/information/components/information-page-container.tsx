@@ -3,7 +3,6 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -16,7 +15,6 @@ import { Label } from '@/shared/components/ui/label';
 import { ShineBorder } from '@/shared/components/ui/shine-border';
 import { useUserContext } from '@/shared/contexts/user-context';
 import { UserModelProps } from '@/shared/types';
-import { UploadButton } from '@/shared/utils'; // Đảm bảo đường dẫn này đúng
 
 // Định nghĩa schema cho form validation với Zod
 const profileFormSchema = z.object({
@@ -30,7 +28,7 @@ const profileFormSchema = z.object({
     .max(30, { message: 'Tên người dùng không được quá 30 ký tự.' })
     .optional()
     .or(z.literal('')),
-  avatar: z // Avatar giờ đây có thể là URL bất kỳ, bao gồm cả URL từ UploadThing hoặc Clerk
+  avatar: z
     .string()
     .url({ message: 'Vui lòng nhập URL ảnh đại diện hợp lệ.' })
     .optional()
@@ -139,60 +137,6 @@ const InfoPageContainer = () => {
       onSubmit={form.handleSubmit(onSubmit)}
     >
       <ShineBorder shineColor={['#A07CFE', '#FE8FB5', '#FFBE7B']} />
-
-      {/* Phần hiển thị và upload ảnh đại diện */}
-      <div className="flex flex-col items-center justify-start gap-4">
-        <Label
-          className="text-lg font-semibold"
-          htmlFor="avatar-upload"
-        >
-          Ảnh đại diện
-        </Label>
-        <Image
-          alt="Ảnh đại diện"
-          className="size-32 rounded-full border-2 border-gray-300 object-cover dark:border-gray-600"
-          height={128}
-          src={imageWatch || userInfo?.avatar || '/placeholder-avatar.png'}
-          width={128}
-          onError={(e) => {
-            e.currentTarget.src = '/placeholder-avatar.png';
-          }}
-        />
-        <UploadButton
-          endpoint="imageUploader" // Endpoint của UploadThing
-          appearance={{
-            button:
-              'ut-button:bg-primary ut-button:text-primary-foreground ut-button:hover:bg-primary/90 ut-button:rounded-md ut-button:px-4 ut-button:py-2 text-sm',
-            allowedContent:
-              'ut-allowed-content:text-muted-foreground ut-allowed-content:text-xs mt-1',
-          }}
-          content={{
-            button({ isUploading, ready }) {
-              if (isUploading) return 'Đang tải lên...';
-              if (ready) return 'Thay đổi ảnh';
-
-              return 'Đang chuẩn bị...';
-            },
-            allowedContent({ isUploading, ready }) {
-              if (!ready || isUploading) return null;
-
-              return `JPG, PNG, GIF (tối đa ${4}MB)`;
-            },
-          }}
-          onClientUploadComplete={(response) => {
-            if (response && response[0] && response[0].url) {
-              form.setValue('avatar', response[0].url, { shouldDirty: true }); // Cập nhật giá trị form và đánh dấu là dirty
-              toast.info(
-                'Ảnh đã được tải lên. Nhấn "Cập nhật thông tin" để lưu thay đổi.',
-              );
-            }
-          }}
-          onUploadError={(error: Error) => {
-            console.error(`Lỗi UploadThing: ${error.message}`);
-            toast.error('Tải ảnh lên thất bại: ' + error.message);
-          }}
-        />
-      </div>
 
       {/* Các trường thông tin khác */}
       <div className="space-y-6">

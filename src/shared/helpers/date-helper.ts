@@ -23,3 +23,26 @@ export const timeAgo = (date: string | Date) => {
 
   return `${seconds} giây trước`;
 };
+
+// Hàm chuyển đổi giây sang {h, m, s}
+export const secondsToHMS = (
+  totalSeconds: number | undefined | null,
+): { h: number; m: number; s: number } => {
+  if (
+    totalSeconds === null ||
+    totalSeconds === undefined ||
+    isNaN(totalSeconds) ||
+    totalSeconds < 0
+  ) {
+    return { h: 0, m: 0, s: 0 };
+  }
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = Math.floor(totalSeconds % 60);
+  return { h, m, s };
+};
+
+// Hàm chuyển đổi {h, m, s} sang tổng số giây
+export const hmsToSeconds = (h: number, m: number, s: number): number => {
+  return (Number(h) || 0) * 3600 + (Number(m) || 0) * 60 + (Number(s) || 0);
+};

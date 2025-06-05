@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 
 import { IconClock } from '@/shared/components/icons';
-import { formatMinutesToHour } from '@/shared/helpers';
 
+import { useVideoDuration } from '@/shared/hooks/use-video-duration';
 import { getCourseLessonsInfo } from '../../actions';
 
 export interface CourseItemDurationProps {
@@ -13,7 +13,7 @@ export interface CourseItemDurationProps {
 
 function CourseItemDuration({ slug }: CourseItemDurationProps) {
   const [duration, setDuration] = useState(0);
-
+  const { formatDuration } = useVideoDuration();
   useEffect(() => {
     async function getDuration() {
       const response = await getCourseLessonsInfo({ slug });
@@ -26,7 +26,7 @@ function CourseItemDuration({ slug }: CourseItemDurationProps) {
   return (
     <div className="flex items-center gap-2">
       <IconClock className="size-4" />
-      <span>{formatMinutesToHour(duration)}</span>
+      <span>{formatDuration(duration)}</span>
     </div>
   );
 }

@@ -8,6 +8,7 @@ export enum NotificationType {
   ORDER_CANCELED = 'ORDER_CANCELED',
   FREE_COURSE = 'FREE_COURSE',
   PAID_COURSE_APPROVED = 'PAID_COURSE_APPROVED',
+  ORDER_PENDING = 'ORDER_PENDING',
 }
 export interface PlainNotificationData {
   _id: string; // Luôn là string sau khi serialize

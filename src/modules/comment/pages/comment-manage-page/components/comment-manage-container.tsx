@@ -1,13 +1,12 @@
 'use client';
 
-import Link from 'next/link';
-import { toast } from 'react-toastify';
-import Swal from 'sweetalert2';
-
 import { updateCommentStatus } from '@/modules/comment/actions';
 import OrderAction from '@/modules/order/pages/order-manage-page/components/order-action';
-import { BadgeStatus, Heading } from '@/shared/components/common';
-import { IconCancel, IconCheck } from '@/shared/components/icons';
+import {
+  BadgeStatus,
+  Heading,
+  TableActionItem,
+} from '@/shared/components/common';
 import {
   Input,
   Select,
@@ -26,6 +25,9 @@ import {
 import { allValue, CommentStatus, commentStatus } from '@/shared/constants';
 import { useQueryString } from '@/shared/hooks';
 import { CommentItemData } from '@/shared/types';
+import Link from 'next/link';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 interface CommentManageContainerProps {
   comments?: CommentItemData[] | undefined;
@@ -168,7 +170,7 @@ const CommentManageContainer = ({
                               })
                             }
                           >
-                            <IconCheck />
+                            <TableActionItem type="approve" />
                           </OrderAction>
                         )}
                         <OrderAction
@@ -179,7 +181,7 @@ const CommentManageContainer = ({
                             })
                           }
                         >
-                          <IconCancel />
+                          <TableActionItem type="cancel" />
                         </OrderAction>
                       </div>
                     )}

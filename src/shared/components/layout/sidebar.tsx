@@ -6,6 +6,7 @@ import { useMemo } from 'react';
 import { menuItems } from '@/shared/constants';
 import { useUserContext } from '@/shared/contexts';
 
+import { MenuField } from '@/shared/types';
 import { cn } from '@/shared/utils';
 import { ChevronRight } from 'lucide-react';
 import { MenuItem, ModeToggle } from '../common';
@@ -21,13 +22,39 @@ function Sidebar() {
     if (isLoadingUser) {
       return [];
     }
+    let itemsToDisplay: MenuField[] = [...menuItems];
     if (userInfo?.role === 'ADMIN') {
-      return menuItems;
+    } else {
+      itemsToDisplay = menuItems.filter((item) => !item.isManageItem);
+
+      const exploreIndex = itemsToDisplay.findIndex(
+        (item) => item.title === 'Khám phá',
+      );
+      if (exploreIndex > 0) {
+        const exploreItem = itemsToDisplay.splice(exploreIndex, 1)[0];
+        itemsToDisplay.unshift(exploreItem);
+      }
     }
 
-    return menuItems.filter((item) => !item.isManageItem);
+    return itemsToDisplay;
   }, [userInfo, isLoadingUser]);
-
+  if (isLoadingUser) {
+    return (
+      <div className="borderDarkMode bgDarkMode fixed inset-y-0 left-0 hidden w-[300px] animate-pulse flex-col border-r p-5 lg:flex">
+        {/* Skeleton UI */}
+        <div className="mb-5 h-10 w-3/4 rounded bg-gray-200 dark:bg-gray-700"></div>
+        <div className="flex flex-col gap-2">
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="h-10 rounded bg-gray-200 dark:bg-gray-700"
+            ></div>
+          ))}
+        </div>
+        <div className="ml-auto mt-auto h-10 w-1/2 rounded bg-gray-200 dark:bg-gray-700"></div>
+      </div>
+    );
+  }
   return (
     <div className="borderDarkMode bgDarkMode fixed inset-y-0 left-0 hidden w-[300px] flex-col border-r p-5 lg:flex">
       <Link

@@ -1,5 +1,6 @@
 export { default as IconAdd } from './icon-add';
 export { default as IconBlink } from './icon-blink';
+export { default as IconBuilding } from './icon-building';
 export { default as IconCancel } from './icon-cancel';
 export { default as IconCheck } from './icon-check';
 export { default as IconClock } from './icon-clock';

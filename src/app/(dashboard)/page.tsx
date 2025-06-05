@@ -1,14 +1,7 @@
-import { CourseDashboardPage } from '@/modules/course/pages';
-import { Heading } from '@/shared/components/common';
-import { QuerySearchParams } from '@/shared/types';
+import { RoleBasedRedirect } from '@/shared/components/layout';
 
-function CourseDashboardRoot({ searchParams }: QuerySearchParams) {
-  return (
-    <>
-      <Heading>Khám phá</Heading>
-      <CourseDashboardPage searchParams={searchParams} />
-    </>
-  );
+function CourseDashboardRoot() {
+  return <RoleBasedRedirect />;
 }
 
 export default CourseDashboardRoot;
