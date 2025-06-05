@@ -63,7 +63,7 @@ function CreateCourseContainer() {
       }
       toast.success('Tạo khóa học thành công');
       if (response?.data) {
-        router.push(`/manage/course/outline?slug=${response.data.slug}`);
+        router.push(`/manage/course/update?slug=${response.data.slug}`);
       }
     } finally {
       setIsSubmitting(false);

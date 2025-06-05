@@ -1,4 +1,4 @@
-import { fetchCourses } from '@/modules/course/actions'; // Đảm bảo đường dẫn đúng
+import { fetchCourses } from '@/modules/course/actions';
 import { ITEMS_PER_PAGES_ROOT } from '@/shared/constants';
 
 import { QuerySearchParams } from '@/shared/types';
