@@ -11,12 +11,10 @@ function RoleBasedRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    // Chờ cho đến khi auth và user info đã được load
     if (!isLoaded || isLoadingUser || !userId) {
       return;
     }
 
-    // Nếu user chưa đăng nhập, redirect đến trang đăng nhập
     if (!userInfo) {
       router.push('/sign-in');
       return;
@@ -26,7 +24,7 @@ function RoleBasedRedirect() {
     if (userInfo.role === 'ADMIN') {
       router.push('/dashboard');
     } else {
-      router.push('/explore'); // hoặc trang khám phá của bạn
+      router.push('/explore');
     }
   }, [isLoaded, isLoadingUser, userId, userInfo, router]);
 

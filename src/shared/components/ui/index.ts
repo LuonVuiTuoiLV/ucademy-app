@@ -10,6 +10,7 @@ export * from './gradient-text';
 export * from './input';
 export * from './input-format';
 export * from './label';
+export * from './pie-chart';
 export * from './popover';
 export * from './radio-group';
 export * from './rainbow-button';

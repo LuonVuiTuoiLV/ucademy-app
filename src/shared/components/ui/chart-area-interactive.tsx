@@ -27,7 +27,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from '@/shared/components/ui/toggle-group';
-import { useIsMobile } from '../hooks/use-mobile';
+import { useIsMobile } from '../../hooks/use-mobile';
 const chartData = [
   { date: '2024-04-01', desktop: 222, mobile: 150 },
   { date: '2024-04-02', desktop: 97, mobile: 180 },

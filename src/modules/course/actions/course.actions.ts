@@ -45,25 +45,21 @@ export async function fetchCourses(params: QueryFilter): Promise<
     } = params;
     const skip = (page - 1) * limit;
     const query: FilterQuery<typeof CourseModel> = {};
-    if (statusParam) {
-      query.status = statusParam;
-    } else {
-      query.status = CourseStatus.APPROVED;
-    }
+    query.status = statusParam || CourseStatus.APPROVED;
     if (search) {
-      query.$or = [{ title: { $regex: search, $options: 'i' } }];
+      query.title = { $regex: new RegExp(search, 'i') };
     }
     if (isFree === true) {
       query.is_free = true;
     } else if (isFree === false) {
       query.$or = [{ is_free: false }, { is_free: { $exists: false } }];
     }
+
     const courseList = await CourseModel.find(query)
       .skip(skip)
       .limit(limit)
       .sort({ created_at: -1 })
       .lean();
-
     const total = await CourseModel.countDocuments(query);
 
     return {

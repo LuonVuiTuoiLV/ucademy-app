@@ -85,7 +85,10 @@ function CourseDashboardContainer({
   }, [initialIsFree]);
 
   const handleUrlUpdate = useCallback(
-    (newQueryValues: Record<string, string | null>) => {
+    (
+      newQueryValues: Record<string, string | null>,
+      resetPage: boolean = false,
+    ) => {
       setIsLoading(true);
       const params = new URLSearchParams(
         Array.from(currentSearchParams.entries()),
@@ -98,7 +101,9 @@ function CourseDashboardContainer({
           params.set(key, value);
         }
       });
-
+      if (resetPage) {
+        params.set('page', '1');
+      }
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [currentSearchParams, router, pathname],
@@ -106,14 +111,17 @@ function CourseDashboardContainer({
 
   const handleSearch = useCallback(
     (searchValue: string) => {
-      handleUrlUpdate({ search: searchValue.trim() });
+      handleUrlUpdate(
+        { search: searchValue.trim() ? searchValue.trim() : null },
+        true,
+      );
     },
     [handleUrlUpdate],
   );
   const handleIsFreeChange = useCallback(
     (checked: boolean) => {
       setIsFreeChecked(checked);
-      handleUrlUpdate({ isFree: checked ? 'true' : null });
+      handleUrlUpdate({ isFree: checked ? 'true' : null }, true);
     },
     [handleUrlUpdate],
   );

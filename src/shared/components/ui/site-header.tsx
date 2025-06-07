@@ -1,4 +1,4 @@
-import { Heading } from './common';
+import { Heading } from '../common';
 
 export function SiteHeader() {
   return (

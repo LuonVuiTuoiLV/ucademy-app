@@ -48,9 +48,8 @@ const CourseItem = ({
       <div className="flex flex-1 flex-col pt-4">
         <h3 className="mb-3 text-lg font-bold">{data.title}</h3>
         <div className="mt-auto">
-          {cta !== 'Tiếp tục học'}
-          {
-            <div className="mb-5 flex items-center gap-3 text-xs text-gray-500 dark:text-grayDark">
+          {cta !== 'Tiếp tục học' && (
+            <div className="mb-7 flex items-center gap-3 text-xs text-gray-500 dark:text-grayDark">
               {courseInfo.map((item) => (
                 <div
                   key={item.title}
@@ -70,9 +69,9 @@ const CourseItem = ({
                 </span>
               )}
             </div>
-          }
+          )}
           <Link
-            className="button-primary mt-10 flex h-12 w-full items-center justify-center rounded-lg bg-primary font-bold text-white"
+            className="button-primary mt-3 flex h-12 w-full items-center justify-center rounded-lg bg-primary font-bold text-white"
             href={courseUrl}
           >
             {cta}
