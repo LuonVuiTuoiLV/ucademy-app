@@ -83,7 +83,7 @@ async function CourseDetailsContainer({
       ),
     },
     {
-      title: 'Nội dung khóa học',
+      title: '',
       content: (
         <CourseOutline
           course=""

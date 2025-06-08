@@ -5,6 +5,7 @@ import { IconEye, IconStar } from '@/shared/components/icons';
 import { formatNumberToK } from '@/shared/helpers';
 import { CourseItemData } from '@/shared/types';
 
+import { useRouter } from 'next/navigation';
 import CourseItemDuration from './course-item-duration';
 
 interface CourseItemProps {
@@ -17,7 +18,12 @@ const CourseItem = ({
   data,
   url = '',
 }: CourseItemProps) => {
+  const router = useRouter();
   const courseUrl = url || `/course/${data.slug}`;
+  const handleNavigate = () => {
+    router.push(courseUrl);
+    router.refresh();
+  };
   const courseInfo = [
     {
       title: formatNumberToK(data.views),
@@ -70,12 +76,13 @@ const CourseItem = ({
               )}
             </div>
           )}
-          <Link
+          <button
+            type="button"
             className="button-primary mt-3 flex h-12 w-full items-center justify-center rounded-lg bg-primary font-bold text-white"
-            href={courseUrl}
+            onClick={handleNavigate}
           >
             {cta}
-          </Link>
+          </button>
         </div>
       </div>
     </div>

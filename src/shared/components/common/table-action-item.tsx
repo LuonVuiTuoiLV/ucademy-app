@@ -44,7 +44,7 @@ const TableActionItem = ({
     edit: 'Chỉnh sửa',
     delete: 'Xóa',
     view: 'Xem',
-    study: 'Thêm bài học',
+    study: 'Thêm',
     approve: 'Phê duyệt',
     cancel: 'Từ chối',
   };

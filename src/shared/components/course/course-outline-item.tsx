@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { createHistory } from '@/modules/history/actions';
 import { IconPlay } from '@/shared/components/icons';
 import { Checkbox } from '@/shared/components/ui';
+import { formatVideoDuration } from '@/shared/helpers';
 import { LessonItemData } from '@/shared/types';
 import { cn } from '@/shared/utils';
 
@@ -58,7 +59,7 @@ const CourseOutlineItem = ({
         <h4 className="line-clamp-1">{lesson.title}</h4>
       )}
       <span className="ml-auto shrink-0 text-xs font-semibold">
-        {lesson.duration} phút
+        {formatVideoDuration(lesson.duration)}
       </span>
     </div>
   );
