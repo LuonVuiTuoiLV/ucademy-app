@@ -123,9 +123,7 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('onSubmit: Bắt đầu xử lý, giá trị form:', values);
     setIsSubmitting(true);
-    console.log('onSubmit: isSubmitting được đặt thành true');
 
     let priceValue = 0;
     let salePriceValue = 0;
@@ -158,13 +156,10 @@ const UpdateCourseContainer = ({ course }: UpdateCourseContainerProps) => {
         },
         path: `/manage/course/update?slug=${values.slug || course.slug}`,
       });
-      console.log('onSubmit: Kết quả từ updateCourse:', response);
 
       if (response?.success) {
         toast.success(response.message || 'Cập nhật khóa học thành công');
-        console.log(
-          'onSubmit: Cập nhật thành công, chuyển hướng về /manage/course',
-        );
+
         if (values.slug && values.slug !== course.slug) {
           router.push(`/manage/course/update?slug=${values.slug}`);
         } else {

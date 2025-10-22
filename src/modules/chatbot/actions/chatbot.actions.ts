@@ -21,7 +21,6 @@ import {
 const GEMINI_API_KEY = process.env.GOOGLE_GEMINI_API_KEY;
 
 if (!GEMINI_API_KEY) {
-  console.error('FATAL ERROR: GOOGLE_GEMINI_API_KEY is not set');
   throw new Error('GOOGLE_GEMINI_API_KEY is not set');
 }
 
@@ -126,8 +125,6 @@ Phân tích JSON:
       requiresContextFromDB: analysis.requiresContextFromDB === true,
     };
   } catch (error) {
-    console.error('Error analyzing user query with Gemini:', error);
-
     return {
       intent: 'UNKNOWN_OR_COMPLEX_QUERY',
       entities: {},
@@ -205,7 +202,6 @@ async function fetchDataFromDatabase(
       // Thêm các case khác tại đây
     }
   } catch (databaseError) {
-    console.error(`DB Error for intent "${intent}":`, databaseError);
     queryRan = `DB Error during intent: ${intent}`;
     data = null;
   }
@@ -310,7 +306,6 @@ export async function askChatbot(
       debugInfo,
     };
   } catch (error: any) {
-    console.error('Critical error in askChatbot action:', error);
     let errorMessage = 'Đã có lỗi xảy ra khi xử lý yêu cầu của bạn.';
 
     if (error.message?.includes('JSON.parse')) {

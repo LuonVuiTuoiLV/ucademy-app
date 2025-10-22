@@ -76,7 +76,6 @@ const ChatWidget = () => {
         );
       }
     } catch (error) {
-      console.error('Lỗi khi gọi chatbot:', error);
       updateBotMessage(
         botMessageId,
         'Đã có lỗi kết nối. Vui lòng thử lại sau.',

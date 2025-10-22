@@ -114,7 +114,6 @@ const OutlineItem = ({ lesson }: OutlineItemProps) => {
           toast.error(durationError);
         }
       } catch (error) {
-        console.error('Error getting video duration:', error);
         toast.error('Không thể lấy thời lượng video');
       } finally {
         setIsGettingDuration(false);
@@ -158,7 +157,6 @@ const OutlineItem = ({ lesson }: OutlineItemProps) => {
         toast.error('Không thể lấy thời lượng video. Vui lòng kiểm tra URL.');
       }
     } catch (error) {
-      console.error('Error getting video duration:', error);
       toast.error('Lỗi khi lấy thời lượng video');
     } finally {
       setIsGettingDuration(false);
