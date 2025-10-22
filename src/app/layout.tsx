@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.scss';
 
@@ -26,6 +27,7 @@ export const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-manrope',
 });
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +39,7 @@ export default function RootLayout({
         suppressHydrationWarning
         lang="vi"
       >
-        <body className={`${manrope.variable} `}>
+        <body className={`${manrope.variable}`}>
           <NextTopLoader
             color={COLOR.gradient}
             initialPosition={0.08}
@@ -54,11 +56,15 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="system"
           >
+            {/* UserProvider phải nằm trong ClerkProvider */}
             <UserProvider>
+              {/* ConditionalChatLayout không nên force redirect dựa vào auth state */}
               <ConditionalChatLayout>{children}</ConditionalChatLayout>
             </UserProvider>
+
             <SpeedInsights />
             <Analytics />
+
             <ToastContainer
               autoClose={2000}
               bodyClassName="text-sm font-medium"
